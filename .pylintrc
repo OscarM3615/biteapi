@@ -1,0 +1,9 @@
+[MASTER]
+disable=
+	C0301, # line too long
+	C0326, # bad whitespace
+	R0902, # too many instance attributes
+	R0913 # too many arguments
+
+[FORMAT]
+indent-string=\t

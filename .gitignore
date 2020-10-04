@@ -1,0 +1,13 @@
+# Virtual environment
+venv/
+
+# Editor files
+.vscode/
+*.swp
+
+# Python output files
+__pycache__/
+*.pyc
+
+# Development database
+Data.db
