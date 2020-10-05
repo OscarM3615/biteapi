@@ -13,14 +13,14 @@ class UserModel(db.Model):
 	__tablename__ = 'Users'
 
 	id = db.Column(db.Integer(), primary_key = True)
-	first_name = db.Column(db.String(20))
-	last_name = db.Column(db.String(20))
-	email = db.Column(db.String(50), unique = True)
-	password = db.Column(db.String(80))
-	user_type = db.Column(db.String(10))
+	first_name = db.Column(db.String(20), nullable = False)
+	last_name = db.Column(db.String(20), nullable = False)
+	email = db.Column(db.String(50), unique = True, nullable = False)
+	password = db.Column(db.String(80), nullable = False)
+	user_type = db.Column(db.String(10), nullable = False)
 	picture = db.Column(db.String(100))
-	active_state = db.Column(db.Boolean())
-	recovery_key = db.Column(db.String(64))
+	active_state = db.Column(db.Boolean(), nullable = False)
+	recovery_key = db.Column(db.String(64), nullable = False)
 
 	customers = db.relationship('OrderModel', backref = 'customer', cascade = 'all, delete-orphan', lazy = 'dynamic', foreign_keys = 'OrderModel.customer_id')
 	favourites = db.relationship('FavouriteModel', backref = 'user', cascade = 'all, delete-orphan', lazy = 'dynamic')

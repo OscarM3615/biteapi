@@ -11,7 +11,7 @@ class CategoryModel(db.Model):
 	__tablename__ = 'Categories'
 
 	category_id = db.Column(db.Integer(), primary_key = True)
-	name = db.Column(db.String(20))
+	name = db.Column(db.String(20), nullable = False)
 
 	products = db.relationship('ProductModel', backref = 'category', cascade = 'all, delete-orphan', lazy = 'dynamic')
 

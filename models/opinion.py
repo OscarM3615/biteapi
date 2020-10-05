@@ -12,8 +12,8 @@ class OpinionModel(db.Model):
 
 	opinion_id = db.Column(db.Integer(), primary_key = True)
 	product_id = db.Column(db.Integer(), db.ForeignKey('Products.product_id', ondelete = 'CASCADE'))
-	rating = db.Column(db.Integer())
-	comment = db.Column(db.String(50))
+	rating = db.Column(db.Integer(), nullable = False)
+	comment = db.Column(db.String(50), nullable = False)
 
 	def __init__(self, product_id: int, rating: int, comment: str):
 		self.product_id = product_id

@@ -12,7 +12,7 @@ class ReportModel(db.Model):
 
 	report_id = db.Column(db.Integer(), primary_key = True)
 	user_id = db.Column(db.Integer, db.ForeignKey('Users.id', ondelete = 'CASCADE'))
-	comment = db.Column(db.String(150))
+	comment = db.Column(db.String(150), nullable = False)
 
 	def __init__(self, user_id: int, comment: str):
 		self.user_id = user_id
