@@ -11,7 +11,7 @@ class ProductModel(db.Model):
 	__tablename__ = 'Products'
 
 	product_id = db.Column(db.Integer(), primary_key = True)
-	user_id = db.Column(db.Integer(), db.ForeignKey('Users.user_id', ondelete = 'CASCADE'))
+	user_id = db.Column(db.Integer(), db.ForeignKey('Users.id', ondelete = 'CASCADE'))
 	category_id = db.Column(db.Integer(), db.ForeignKey('Categories.category_id', ondelete = 'CASCADE'))
 	name = db.Column(db.String(20))
 	description = db.Column(db.String(255))

@@ -12,8 +12,8 @@ class OrderModel(db.Model):
 	__tablename__ = 'Orders'
 
 	order_id = db.Column(db.Integer(), primary_key = True)
-	customer_id = db.Column(db.Integer(), db.ForeignKey('Users.user_id', ondelete = 'CASCADE'))
-	vendor_id = db.Column(db.Integer(), db.ForeignKey('Users.user_id', ondelete = 'CASCADE'))
+	customer_id = db.Column(db.Integer(), db.ForeignKey('Users.id', ondelete = 'CASCADE'))
+	vendor_id = db.Column(db.Integer(), db.ForeignKey('Users.id', ondelete = 'CASCADE'))
 	product_id = db.Column(db.Integer(), db.ForeignKey('Products.product_id', ondelete = 'CASCADE'))
 	location = db.Column(db.String(50))
 	amount = db.Column(db.Integer())

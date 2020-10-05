@@ -12,7 +12,7 @@ class UserModel(db.Model):
 	"""
 	__tablename__ = 'Users'
 
-	user_id = db.Column(db.Integer(), primary_key = True)
+	id = db.Column(db.Integer(), primary_key = True)
 	first_name = db.Column(db.String(20))
 	last_name = db.Column(db.String(20))
 	email = db.Column(db.String(50), unique = True)
@@ -43,7 +43,7 @@ class UserModel(db.Model):
 		"""
 		Devuelve un objeto de esta clase con base en su ID, si no es encontrado devuelve None.
 		"""
-		return cls.query.filter_by(user_id = user_id).first()
+		return cls.query.filter_by(id = user_id).first()
 
 	@classmethod
 	def find_by_email(cls, email):
