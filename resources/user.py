@@ -3,15 +3,26 @@ Este módulo contiene las clases necesarias para permitir el acceso a los datos 
 """
 
 import re
+
 import bcrypt
 from flask_restful import Resource, reqparse
+
 from models.user import UserModel
+from regex import identityRegex, emailRegex, passwordRegex
 
 class User(Resource):
 	"""
 	Esta clase maneja los métodos HTTP para modificar usuarios.
 	"""
-	pass
+	def put(self, user_id: int):
+		pass
+
+	def delete(self, user_id: int):
+		user = UserModel.find_by_id(user_id)
+		if user:
+			user.delete_from_db()
+			return {"message": "Usuario borrado correctamente."}
+		return {"message": "El usuario indicado no existe."}, 404
 
 class UserRegistration(Resource):
 	"""
@@ -25,10 +36,6 @@ class UserRegistration(Resource):
 
 	def post(self):
 		data = UserRegistration.parser.parse_args()
-
-		identityRegex = re.compile(r'^[a-záéíóúñ]{1,20}$', re.IGNORECASE)
-		emailRegex = re.compile(r'^[A-Za-z0-9_\-]+(\.[A-Za-z0-9_\-]+)*@([A-Za-z0-9_\-]+\.)+[a-z]{2,5}$')
-		passwordRegex = re.compile(r'.{4,}')
 
 		if UserModel.find_by_email(data['email']):
 			return {"message": "Ya existe una cuenta registrada con ese correo."}, 400
@@ -46,4 +53,4 @@ class UserRegistration(Resource):
 		new_user = UserModel(data['first_name'], data['last_name'], data['email'], hashed_password)
 		new_user.save_to_db()
 
-		return {"message": "Usuario creado correctamente."}, 201
+		return new_user.json(), 201

@@ -34,9 +34,19 @@ class UserModel(db.Model):
 		self.email = email
 		self.password = password
 		self.user_type = 'Normal'
-		self.picture = 'default'
+		self.picture = None
 		self.active_state = True
 		self.recovery_key = sha256(str(randint(1, 9999)).encode('utf-8')).hexdigest()
+
+	def json(self):
+		return {
+			"id": self.id,
+			"first_name": self.first_name,
+			"last_name": self.last_name,
+			"email": self.email,
+			"picture": self.picture,
+			"is_active": self.active_state
+		}
 
 	@classmethod
 	def find_by_id(cls, user_id):

@@ -45,6 +45,7 @@ def create_tables():
 
 # Rutas de la API.
 api.add_resource(UserRegistration, '/register')
+api.add_resource(User, '/users/<int:user_id>')
 
 db.init_app(app)
 
