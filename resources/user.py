@@ -20,8 +20,20 @@ class User(Resource):
 	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
 
+	def get(self, user_id: int):
+		"""
+		Obtener los datos del usuario. Se le permite a cualquiera.
+		"""
+		user = UserModel.find_by_id(user_id)
+		if not user:
+			return {"message": "El usuario no ha sido encontrado."}, 404
+		return user.json(True)
+
 	@jwt_required()
 	def put(self, user_id: int):
+		"""
+		Actualizar los datos del usuario. Permitir solo si es el mismo usuario quien lo solicita.
+		"""
 		current_user = current_identity
 		if current_user.id != user_id:
 			return {"message": "No tiene permiso para modificar los datos de esta cuenta."}, 401
@@ -50,6 +62,9 @@ class User(Resource):
 
 	@jwt_required()
 	def delete(self, user_id: int):
+		"""
+		Eliminar un usuario de la base de datos. Permitir eliminació solo si es el mismo usuario o es de tipo admin.
+		"""
 		current_user = current_identity
 		if current_user.id != user_id and current_user.user_type != 'admin':
 			return {"message": "No tiene permiso para eliminar esta cuenta."}, 401
@@ -71,6 +86,9 @@ class UserRegistration(Resource):
 	parser.add_argument('password',type = str, required = True, help = 'La contraseña es requerida.')
 
 	def post(self):
+		"""
+		Registrar a un usuario en la base de datos proporcionando su nombre completo, correo y contraseña.
+		"""
 		data = UserRegistration.parser.parse_args()
 
 		if UserModel.find_by_email(data['email']):

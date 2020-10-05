@@ -38,7 +38,15 @@ class UserModel(db.Model):
 		self.active_state = True
 		self.recovery_key = sha256(str(randint(1, 9999)).encode('utf-8')).hexdigest()
 
-	def json(self):
+	def json(self, public: bool = False):
+		if public:
+			return {
+				"id": self.id,
+				"first_name": self.first_name,
+				"last_name": self.last_name,
+				"picture": self.picture,
+				"is_active": self.active_state
+			}
 		return {
 			"id": self.id,
 			"first_name": self.first_name,
@@ -49,14 +57,14 @@ class UserModel(db.Model):
 		}
 
 	@classmethod
-	def find_by_id(cls, user_id):
+	def find_by_id(cls, user_id: int):
 		"""
 		Devuelve un objeto de esta clase con base en su ID, si no es encontrado devuelve None.
 		"""
 		return cls.query.filter_by(id = user_id).first()
 
 	@classmethod
-	def find_by_email(cls, email):
+	def find_by_email(cls, email: str):
 		"""
 		Devuelve un objeto de esta clase con base en su correo, si no es encontrado devuelve None.
 		"""
