@@ -14,7 +14,7 @@ class ReportModel(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('Users.id', ondelete = 'CASCADE'))
 	comment = db.Column(db.String(150))
 
-	def __init__(self, user_id, comment):
+	def __init__(self, user_id: int, comment: str):
 		self.user_id = user_id
 		self.comment = comment
 	

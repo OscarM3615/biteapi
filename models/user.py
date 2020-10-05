@@ -28,7 +28,7 @@ class UserModel(db.Model):
 	reports = db.relationship('ReportModel', backref = 'user', cascade = 'all, delete-orphan', lazy = 'dynamic')
 	vendors = db.relationship('OrderModel', backref = 'vendor', cascade = 'all, delete-orphan', lazy = 'dynamic', foreign_keys = 'OrderModel.vendor_id')
 
-	def __init__(self, first_name, last_name, email, password):
+	def __init__(self, first_name: str, last_name: str, email: str, password: str):
 		self.first_name = first_name
 		self.last_name = last_name
 		self.email = email

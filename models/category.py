@@ -15,7 +15,7 @@ class CategoryModel(db.Model):
 
 	products = db.relationship('ProductModel', backref = 'category', cascade = 'all, delete-orphan', lazy = 'dynamic')
 
-	def __init__(self, name):
+	def __init__(self, name: str):
 		self.name = name
 
 	def save_to_db(self):

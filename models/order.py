@@ -21,7 +21,7 @@ class OrderModel(db.Model):
 	status = db.Column(db.String(15))
 	order_time = db.Column(db.DateTime(), default = datetime.utcnow)
 
-	def __init__(self, customer_id, vendor_id, product_id, location, amount, comment):
+	def __init__(self, customer_id: int, vendor_id: int, product_id: int, location: str, amount: float, comment: str):
 		self.customer_id = customer_id
 		self.vendor_id = vendor_id
 		self.product_id = product_id

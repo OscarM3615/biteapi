@@ -23,7 +23,7 @@ class ProductModel(db.Model):
 	orders = db.relationship('OrderModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')
 	opinions = db.relationship('OpinionModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')
 
-	def __init__(self, user_id, category_id, name, description, price, image):
+	def __init__(self, user_id: int, category_id: int, name: str, description: str, price: float, image: str):
 		self.user_id = user_id
 		self.category_id = category_id
 		self.name = name

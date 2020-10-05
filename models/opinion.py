@@ -15,7 +15,7 @@ class OpinionModel(db.Model):
 	rating = db.Column(db.Integer())
 	comment = db.Column(db.String(50))
 
-	def __init__(self, product_id, rating, comment):
+	def __init__(self, product_id: int, rating: int, comment: str):
 		self.product_id = product_id
 		self.rating = rating
 		self.comment = comment
