@@ -27,7 +27,7 @@ class User(Resource):
 		"""
 		user = UserModel.find_by_id(user_id)
 		if not user:
-			return {"message": "El usuario no ha sido encontrado."}, 404
+			return {"message": f"El usuario con ID {user_id!r} no ha sido encontrado."}, 404
 		return user.json()
 
 	@jwt_required()
@@ -42,7 +42,7 @@ class User(Resource):
 		user = UserModel.find_by_id(user_id)
 
 		if not user:
-			return {"message": "El usuario indicado no existe."}, 404
+			return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
 
 		if identityRegex.match(data['first_name']) is None or identityRegex.match(data['last_name']) is None:
 			return {"message": "El formato del nombre o apellido no es correcto."}, 400
@@ -76,8 +76,8 @@ class User(Resource):
 		user = UserModel.find_by_id(user_id)
 		if user:
 			user.delete_from_db()
-			return {"message": "Usuario borrado correctamente."}
-		return {"message": "El usuario indicado no existe."}, 404
+			return {"message": f"Usuario con ID {user_id!r} borrado correctamente."}
+		return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
 
 class UserRegistration(Resource):
 	"""

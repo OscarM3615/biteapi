@@ -5,9 +5,9 @@ Pruebas unitarias para comprobar que las expresiones regulares funcionan como es
 from unittest import TestCase, main as tests_main
 from regex import identityRegex, emailRegex, passwordRegex
 
-class IdentityTest(TestCase):
+class TestRegex(TestCase):
 	"""
-	Comprobar que identityRegex funciona.
+	Comprobar que las expresiones regulares funcionan correctamente.
 	"""
 
 	def test_un_nombre(self):
@@ -30,11 +30,6 @@ class IdentityTest(TestCase):
 		"""No debe aceptar nombres con símbolos."""
 		self.assertIsNone(identityRegex.match('André.'))
 
-class EmailTest(TestCase):
-	"""
-	Comprobar que emailRegex funciona.
-	"""
-
 	def test_correo_dominio(self):
 		"""Debe aceptar correos con la forma dominio.com"""
 		self.assertIsNotNone(emailRegex.match('oscarmiranda3615@gmail.com'))
@@ -54,11 +49,6 @@ class EmailTest(TestCase):
 	def test_solo_usuario(self):
 		"""Debe rechazar cadenas que no tengan el dominio."""
 		self.assertIsNone(emailRegex.match('andre707'))
-
-class PasswordTest(TestCase):
-	"""
-	Comprobar que passwordRegex funciona.
-	"""
 
 	def test_pw_4(self):
 		"""Aceptar contraseñas de cuatro caracteres."""

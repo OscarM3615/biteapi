@@ -21,7 +21,7 @@ class Report(Resource):
 		
 		report = ReportModel.find_by_id(report_id)
 		if not report:
-			return {"message": "El reporte no ha sido encontrado."}, 404
+			return {"message": f"El reporte con ID {report_id!r} no ha sido encontrado."}, 404
 		return report.json()
 
 	@jwt_required()
@@ -34,10 +34,10 @@ class Report(Resource):
 
 		report = ReportModel.find_by_id(report_id)
 		if not report:
-			return {"message": "El reporte no ha sido encontrado."}, 404
+			return {"message": f"El reporte con ID {report_id!r} no ha sido encontrado."}, 404
 
 		report.delete_from_db()
-		return {"message": "Reporte eliminado correctamente."}
+		return {"message": f"Reporte con ID {report_id!r} eliminado correctamente."}
 
 class ReportList(Resource):
 	"""
@@ -63,7 +63,7 @@ class ReportList(Resource):
 		"""
 		data = ReportList.parser.parse_args()
 		if not UserModel.find_by_id(data['user_id']):
-			return {"message": "El usuario indicado con el ID no existe."}, 404
+			return {"message": f"El usuario con ID {data['user_id']!r} no existe."}, 404
 		
 		new_report = ReportModel(**data)
 		new_report.save_to_db()
