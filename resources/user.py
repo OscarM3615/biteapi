@@ -28,7 +28,7 @@ class User(Resource):
 		user = UserModel.find_by_id(user_id)
 		if not user:
 			return {"message": "El usuario no ha sido encontrado."}, 404
-		return user.json(True)
+		return user.json()
 
 	@jwt_required()
 	def put(self, user_id: int):
@@ -63,7 +63,7 @@ class User(Resource):
 		user.email = data['email']
 		user.save_to_db()
 
-		return user.json()
+		return user.json(True)
 
 	@jwt_required()
 	def delete(self, user_id: int):
@@ -111,4 +111,4 @@ class UserRegistration(Resource):
 		new_user = UserModel(data['first_name'], data['last_name'], data['email'], hashed_password)
 		new_user.save_to_db()
 
-		return new_user.json(), 201
+		return new_user.json(True), 201

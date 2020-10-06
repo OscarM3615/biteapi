@@ -15,7 +15,7 @@ from resources.favourite import Favourite
 from resources.opinion import Opinion
 from resources.order import Order
 from resources.product import Product
-from resources.report import Report
+from resources.report import Report, ReportList
 from resources.user import User, UserRegistration
 from security import authenticate, identity
 from db import db
@@ -46,6 +46,8 @@ api.add_resource(UserRegistration, '/register')
 api.add_resource(User, '/users/<int:user_id>')
 api.add_resource(CategoryList, '/categories')
 api.add_resource(Category, '/categories/<int:category_id>')
+api.add_resource(ReportList, '/reports')
+api.add_resource(Report, '/reports/<int:report_id>')
 
 db.init_app(app)
 

@@ -38,12 +38,13 @@ class UserModel(db.Model):
 		self.active_state = True
 		self.recovery_key = sha256(str(randint(1, 9999)).encode('utf-8')).hexdigest()
 
-	def json(self, public: bool = False):
-		if public:
+	def json(self, all_data: bool = False):
+		if all_data:
 			return {
 				"id": self.id,
 				"first_name": self.first_name,
 				"last_name": self.last_name,
+				"email": self.email,
 				"picture": self.picture,
 				"is_active": self.active_state
 			}
@@ -51,7 +52,6 @@ class UserModel(db.Model):
 			"id": self.id,
 			"first_name": self.first_name,
 			"last_name": self.last_name,
-			"email": self.email,
 			"picture": self.picture,
 			"is_active": self.active_state
 		}

@@ -18,6 +18,21 @@ class ReportModel(db.Model):
 		self.user_id = user_id
 		self.comment = comment
 	
+	def json(self):
+		return {
+			"report_id": self.report_id,
+			"comment": self.comment,
+			"user": self.user.json()
+		}
+
+	@classmethod
+	def find_by_id(cls, report_id: int):
+		return cls.query.filter_by(report_id = report_id).first()
+
+	@classmethod
+	def get_all(cls):
+		return cls.query.all()
+
 	def save_to_db(self):
 		"""
 		Guarda los detalles del reporte generado. No se puede modificar aunque el método lo permita.
