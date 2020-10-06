@@ -60,8 +60,11 @@ class User(Resource):
 			else:
 				return {"message": "No tiene permitido cambiar el tipo de usuario."}, 401
 		elif data.get('user_type') in {'normal', 'vendedor'}:
-			user.user_type = data['user_type']
-		else:
+			if current_identity.id == user_id:
+				user.user_type = data['user_type']
+			else:
+				return {"message": "No tiene permitido cambiar el tipo de usuario."}, 401
+		elif data.get('user_type') is not None:
 			return {"message": "El tipo de usuario no es válido ('normal', 'vendedor')."}, 400
 
 		user.first_name = data['first_name']
