@@ -3,8 +3,6 @@ Punto de inicio al sistema.
 En este archivo se establece la configuración sobre las diferentes librerías y se especifican los puntos de acceso para la API.
 """
 
-# Para obtener al usuario actual con el access_token: user = current_identity
-
 import os
 from datetime import timedelta
 

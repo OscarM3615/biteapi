@@ -19,6 +19,7 @@ class User(Resource):
 	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
+	parser.add_argument('user_type', type = str, help = 'Solo un administrador puede cambiar este atributo.')
 
 	def get(self, user_id: int):
 		"""
@@ -34,8 +35,7 @@ class User(Resource):
 		"""
 		Actualizar los datos del usuario. Permitir solo si es el mismo usuario quien lo solicita.
 		"""
-		current_user = current_identity
-		if current_user.id != user_id:
+		if current_identity.id != user_id:
 			return {"message": "No tiene permiso para modificar los datos de esta cuenta."}, 401
 
 		data = User.parser.parse_args()
@@ -52,6 +52,17 @@ class User(Resource):
 
 		if UserModel.find_by_email(data['email']) and user.email != data['email']:
 			return {"message": "El correo proporcionado ya pertenece a una cuenta registrada."}, 400
+		
+		# Solo un admin puede hacer admin a alguien más.
+		if data.get('user_type') == 'admin':
+			if current_identity.user_type == 'admin':
+				user.user_type = data.get('user_type')
+			else:
+				return {"message": "No tiene permitido cambiar el tipo de usuario."}, 401
+		elif data.get('user_type') in {'normal', 'vendedor'}:
+			user.user_type = data['user_type']
+		else:
+			return {"message": "El tipo de usuario no es válido ('normal', 'vendedor')."}, 400
 
 		user.first_name = data['first_name']
 		user.last_name = data['last_name']
@@ -63,10 +74,9 @@ class User(Resource):
 	@jwt_required()
 	def delete(self, user_id: int):
 		"""
-		Eliminar un usuario de la base de datos. Permitir eliminació solo si es el mismo usuario o es de tipo admin.
+		Eliminar un usuario de la base de datos. Permitir eliminación solo si es el mismo usuario o es de tipo admin.
 		"""
-		current_user = current_identity
-		if current_user.id != user_id and current_user.user_type != 'admin':
+		if current_identity.id != user_id and current_identity.user_type != 'admin':
 			return {"message": "No tiene permiso para eliminar esta cuenta."}, 401
 
 		user = UserModel.find_by_id(user_id)
