@@ -5,7 +5,7 @@ Funciones para determinar la identidad del usuario y comprobar sus credenciales.
 import bcrypt
 from models.user import UserModel
 
-def authenticate(email, password):
+def authenticate(email: str, password: str):
 	"""
 	Devuelve al usuario en caso de que sus credenciales sean correctas, si no devuelve None.
 	"""

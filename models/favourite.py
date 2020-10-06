@@ -11,10 +11,10 @@ class FavouriteModel(db.Model):
 	__tablename__ = 'Favourites'
 
 	favourite_id = db.Column(db.Integer(), primary_key = True)
-	user_id = db.Column(db.Integer(), db.ForeignKey('Users.user_id', ondelete = 'CASCADE'))
+	user_id = db.Column(db.Integer(), db.ForeignKey('Users.id', ondelete = 'CASCADE'))
 	product_id = db.Column(db.Integer(), db.ForeignKey('Products.product_id', ondelete = 'CASCADE'))
 
-	def __init__(self, user_id, product_id):
+	def __init__(self, user_id: int, product_id: int):
 		self.user_id = user_id
 		self.product_id = product_id
 

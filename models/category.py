@@ -11,12 +11,33 @@ class CategoryModel(db.Model):
 	__tablename__ = 'Categories'
 
 	category_id = db.Column(db.Integer(), primary_key = True)
-	name = db.Column(db.String(20))
+	name = db.Column(db.String(20), unique = True, nullable = False)
 
 	products = db.relationship('ProductModel', backref = 'category', cascade = 'all, delete-orphan', lazy = 'dynamic')
 
-	def __init__(self, name):
+	def __init__(self, name: str):
 		self.name = name
+
+	def json(self):
+		return {
+			"category_id": self.category_id,
+			"name": self.name
+		}
+
+	@classmethod
+	def find_by_id(cls, category_id: int):
+		"""
+		Devuelve un objeto de esta clase con base en su ID, si no es encontrado devuelve None.
+		"""
+		return cls.query.filter_by(category_id = category_id).first()
+
+	@classmethod
+	def find_by_name(cls, name: str):
+		return cls.query.filter_by(name = name).first()
+
+	@classmethod
+	def get_all(cls):
+		return cls.query.all()
 
 	def save_to_db(self):
 		"""

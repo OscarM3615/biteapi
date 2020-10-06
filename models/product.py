@@ -11,19 +11,19 @@ class ProductModel(db.Model):
 	__tablename__ = 'Products'
 
 	product_id = db.Column(db.Integer(), primary_key = True)
-	user_id = db.Column(db.Integer(), db.ForeignKey('Users.user_id', ondelete = 'CASCADE'))
+	user_id = db.Column(db.Integer(), db.ForeignKey('Users.id', ondelete = 'CASCADE'))
 	category_id = db.Column(db.Integer(), db.ForeignKey('Categories.category_id', ondelete = 'CASCADE'))
-	name = db.Column(db.String(20))
-	description = db.Column(db.String(255))
-	price = db.Column(db.Float(precision = 2))
-	image = db.Column(db.String(100))
-	visible = db.Column(db.Boolean())
+	name = db.Column(db.String(20), nullable = False)
+	description = db.Column(db.String(255), nullable = False)
+	price = db.Column(db.Float(precision = 2), nullable = False)
+	image = db.Column(db.String(100), nullable = False)
+	visible = db.Column(db.Boolean(), nullable = False)
 
 	favourites = db.relationship('FavouriteModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')
 	orders = db.relationship('OrderModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')
 	opinions = db.relationship('OpinionModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')
 
-	def __init__(self, user_id, category_id, name, description, price, image):
+	def __init__(self, user_id: int, category_id: int, name: str, description: str, price: float, image: str):
 		self.user_id = user_id
 		self.category_id = category_id
 		self.name = name

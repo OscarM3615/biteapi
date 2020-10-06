@@ -12,15 +12,15 @@ class UserModel(db.Model):
 	"""
 	__tablename__ = 'Users'
 
-	user_id = db.Column(db.Integer(), primary_key = True)
-	first_name = db.Column(db.String(20))
-	last_name = db.Column(db.String(20))
-	email = db.Column(db.String(50), unique = True)
-	password = db.Column(db.String(80))
-	user_type = db.Column(db.String(10))
+	id = db.Column(db.Integer(), primary_key = True)
+	first_name = db.Column(db.String(20), nullable = False)
+	last_name = db.Column(db.String(20), nullable = False)
+	email = db.Column(db.String(50), unique = True, nullable = False)
+	password = db.Column(db.String(80), nullable = False)
+	user_type = db.Column(db.String(10), nullable = False)
 	picture = db.Column(db.String(100))
-	active_state = db.Column(db.Boolean())
-	recovery_key = db.Column(db.String(64))
+	active_state = db.Column(db.Boolean(), nullable = False)
+	recovery_key = db.Column(db.String(64), nullable = False)
 
 	customers = db.relationship('OrderModel', backref = 'customer', cascade = 'all, delete-orphan', lazy = 'dynamic', foreign_keys = 'OrderModel.customer_id')
 	favourites = db.relationship('FavouriteModel', backref = 'user', cascade = 'all, delete-orphan', lazy = 'dynamic')
@@ -28,25 +28,43 @@ class UserModel(db.Model):
 	reports = db.relationship('ReportModel', backref = 'user', cascade = 'all, delete-orphan', lazy = 'dynamic')
 	vendors = db.relationship('OrderModel', backref = 'vendor', cascade = 'all, delete-orphan', lazy = 'dynamic', foreign_keys = 'OrderModel.vendor_id')
 
-	def __init__(self, first_name, last_name, email, password):
+	def __init__(self, first_name: str, last_name: str, email: str, password: str):
 		self.first_name = first_name
 		self.last_name = last_name
 		self.email = email
 		self.password = password
-		self.user_type = 'Normal'
-		self.picture = 'default'
+		self.user_type = 'normal'
+		self.picture = None
 		self.active_state = True
 		self.recovery_key = sha256(str(randint(1, 9999)).encode('utf-8')).hexdigest()
 
+	def json(self, public: bool = False):
+		if public:
+			return {
+				"id": self.id,
+				"first_name": self.first_name,
+				"last_name": self.last_name,
+				"picture": self.picture,
+				"is_active": self.active_state
+			}
+		return {
+			"id": self.id,
+			"first_name": self.first_name,
+			"last_name": self.last_name,
+			"email": self.email,
+			"picture": self.picture,
+			"is_active": self.active_state
+		}
+
 	@classmethod
-	def find_by_id(cls, user_id):
+	def find_by_id(cls, user_id: int):
 		"""
 		Devuelve un objeto de esta clase con base en su ID, si no es encontrado devuelve None.
 		"""
-		return cls.query.filter_by(user_id = user_id).first()
+		return cls.query.filter_by(id = user_id).first()
 
 	@classmethod
-	def find_by_email(cls, email):
+	def find_by_email(cls, email: str):
 		"""
 		Devuelve un objeto de esta clase con base en su correo, si no es encontrado devuelve None.
 		"""

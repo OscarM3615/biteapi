@@ -11,10 +11,10 @@ class ReportModel(db.Model):
 	__tablename__ = 'Reports'
 
 	report_id = db.Column(db.Integer(), primary_key = True)
-	user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id', ondelete = 'CASCADE'))
-	comment = db.Column(db.String(150))
+	user_id = db.Column(db.Integer, db.ForeignKey('Users.id', ondelete = 'CASCADE'))
+	comment = db.Column(db.String(150), nullable = False)
 
-	def __init__(self, user_id, comment):
+	def __init__(self, user_id: int, comment: str):
 		self.user_id = user_id
 		self.comment = comment
 	
