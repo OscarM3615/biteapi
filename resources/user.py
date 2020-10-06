@@ -52,18 +52,9 @@ class User(Resource):
 
 		if UserModel.find_by_email(data['email']) and user.email != data['email']:
 			return {"message": "El correo proporcionado ya pertenece a una cuenta registrada."}, 400
-		
-		# Solo un admin puede hacer admin a alguien más.
-		if data.get('user_type') == 'admin':
-			if current_identity.user_type == 'admin':
-				user.user_type = data.get('user_type')
-			else:
-				return {"message": "No tiene permitido cambiar el tipo de usuario."}, 401
-		elif data.get('user_type') in {'normal', 'vendedor'}:
-			if current_identity.id == user_id:
-				user.user_type = data['user_type']
-			else:
-				return {"message": "No tiene permitido cambiar el tipo de usuario."}, 401
+
+		if data.get('user_type') in {'normal', 'vendedor'}:
+			user.user_type = data['user_type']
 		elif data.get('user_type') is not None:
 			return {"message": "El tipo de usuario no es válido ('normal', 'vendedor')."}, 400
 
