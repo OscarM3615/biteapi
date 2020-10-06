@@ -10,7 +10,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
 
-from resources.category import Category
+from resources.category import Category, CategoryList
 from resources.favourite import Favourite
 from resources.opinion import Opinion
 from resources.order import Order
@@ -44,6 +44,8 @@ def create_tables():
 # Rutas de la API.
 api.add_resource(UserRegistration, '/register')
 api.add_resource(User, '/users/<int:user_id>')
+api.add_resource(CategoryList, '/categories')
+api.add_resource(Category, '/categories/<int:category_id>')
 
 db.init_app(app)
 
