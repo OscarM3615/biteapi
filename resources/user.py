@@ -41,9 +41,6 @@ class User(Resource):
 		data = User.parser.parse_args()
 		user = UserModel.find_by_id(user_id)
 
-		if not user:
-			return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
-
 		if identityRegex.match(data['first_name']) is None or identityRegex.match(data['last_name']) is None:
 			return {"message": "El formato del nombre o apellido no es correcto."}, 400
 
@@ -93,8 +90,6 @@ class UserPicture(Resource):
 
 		data = UserPicture.parser.parse_args()
 		user = UserModel.find_by_id(user_id)
-		if not user:
-			return {"message": f"El usuario con ID {user_id!r} no ha sido encontrado."}, 404
 
 		if data['picture'] is not None and base64Regex.match(data['picture']) is None:
 			return {"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}, 400
