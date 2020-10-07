@@ -9,7 +9,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from models.user import UserModel
-from regex import identityRegex, emailRegex, passwordRegex
+from regex import identityRegex, emailRegex, passwordRegex, base64Regex
 
 class User(Resource):
 	"""
@@ -78,6 +78,30 @@ class User(Resource):
 			user.delete_from_db()
 			return {"message": f"Usuario con ID {user_id!r} borrado correctamente."}
 		return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
+
+class UserPicture(Resource):
+	"""
+	Esta clase permite modificar la imagen de perfil del usuario.
+	"""
+	parser = reqparse.RequestParser()
+	parser.add_argument('picture', type = str, required = True, help = 'La imagen es requerida (base64 o null).')
+
+	@jwt_required()
+	def put(self, user_id: int):
+		if current_identity.id != user_id:
+			return {"message": "No tiene permitido modificar la imagen de perfil de la cuenta."}, 401
+
+		data = UserPicture.parser.parse_args()
+		user = UserModel.find_by_id(user_id)
+		if not user:
+			return {"message": f"El usuario con ID {user_id!r} no ha sido encontrado."}, 404
+
+		if data['picture'] is not None and base64Regex.match(data['picture']) is None:
+			return {"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}, 400
+
+		user.picture = data['picture']
+		user.save_to_db()
+		return user.json()
 
 class UserRegistration(Resource):
 	"""
