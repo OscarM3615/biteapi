@@ -16,7 +16,7 @@ class ProductModel(db.Model):
 	name = db.Column(db.String(20), nullable = False)
 	description = db.Column(db.String(255), nullable = False)
 	price = db.Column(db.Float(precision = 2), nullable = False)
-	image = db.Column(db.String(100), nullable = False)
+	image = db.Column(db.String(16000000), nullable = False)
 	visible = db.Column(db.Boolean(), nullable = False)
 
 	favourites = db.relationship('FavouriteModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')
@@ -32,6 +32,17 @@ class ProductModel(db.Model):
 		self.image = image
 		self.visible = True
 
+	def json(self):
+		return {
+			"product_id": self.product_id,
+			"user_id": self.user.json(),
+			"category": self.category.json(),
+			"name": self.name,
+			"description": self.description,
+			"price": self.price,
+			"image": self.image
+		}
+
 	def save_to_db(self):
 		"""
 		Guarda o actualiza los datos del producto agregado por el vendedor.
@@ -45,3 +56,15 @@ class ProductModel(db.Model):
 		"""
 		db.session.delete(self)
 		db.session.commit()
+
+	@classmethod
+	def find_by_id(cls, product_id: int):
+		return cls.query.filter_by(product_id = product_id).first()
+
+	@classmethod
+	def get_by_user(cls, user_id: int):
+		return cls.query.filter_by(user_id = user_id).all()
+
+	@classmethod
+	def get_visibles(cls):
+		return cls.query.filter_by(visible = True).all()
