@@ -16,7 +16,7 @@ class Category(Resource):
 		"""
 		category = CategoryModel.find_by_id(category_id)
 		if not category:
-			return {"message": "La categoría no ha sido encontrada."}, 404
+			return {"message": f"La categoría con ID {category_id!r} no ha sido encontrada."}, 404
 		return category.json()
 
 	@jwt_required()
@@ -32,7 +32,7 @@ class Category(Resource):
 			return {"message": "La categoría no ha sido encontrada."}, 404
 		
 		category.delete_from_db()
-		return {"message": "Categoría eliminada correctamente."}
+		return {"message": f"Categoría con ID {category_id!r} eliminada correctamente."}
 
 class CategoryList(Resource):
 	"""
@@ -57,9 +57,9 @@ class CategoryList(Resource):
 
 		data = CategoryList.parser.parse_args()
 		if CategoryModel.find_by_name(data['name']):
-			return {"message": "La categoría indicada ya existe."}, 400
+			return {"message": f"La categoría {data['name']!r} ya existe."}, 400
 
-		new_category = CategoryModel(data['name'])
+		new_category = CategoryModel(**data)
 		new_category.save_to_db()
 
 		return new_category.json(), 201

@@ -2,14 +2,12 @@
 Este módulo contiene las clases necesarias para permitir el acceso a los datos de usuarios.
 """
 
-import re
-
 import bcrypt
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from models.user import UserModel
-from regex import identityRegex, emailRegex, passwordRegex
+from regex import identityRegex, emailRegex, passwordRegex, base64Regex
 
 class User(Resource):
 	"""
@@ -19,7 +17,11 @@ class User(Resource):
 	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
-	parser.add_argument('user_type', type = str, help = 'Solo un administrador puede cambiar este atributo.')
+	parser.add_argument('user_type',
+		type = str,
+		choices = ('normal', 'vendedor'),
+		help = 'El tipo de usuario puede ser: (\'normal\', \'vendedor\').'
+	)
 
 	def get(self, user_id: int):
 		"""
@@ -27,8 +29,8 @@ class User(Resource):
 		"""
 		user = UserModel.find_by_id(user_id)
 		if not user:
-			return {"message": "El usuario no ha sido encontrado."}, 404
-		return user.json(True)
+			return {"message": f"El usuario con ID {user_id!r} no ha sido encontrado."}, 404
+		return user.json()
 
 	@jwt_required()
 	def put(self, user_id: int):
@@ -41,9 +43,6 @@ class User(Resource):
 		data = User.parser.parse_args()
 		user = UserModel.find_by_id(user_id)
 
-		if not user:
-			return {"message": "El usuario indicado no existe."}, 404
-
 		if identityRegex.match(data['first_name']) is None or identityRegex.match(data['last_name']) is None:
 			return {"message": "El formato del nombre o apellido no es correcto."}, 400
 
@@ -53,17 +52,15 @@ class User(Resource):
 		if UserModel.find_by_email(data['email']) and user.email != data['email']:
 			return {"message": "El correo proporcionado ya pertenece a una cuenta registrada."}, 400
 
-		if data.get('user_type') in {'normal', 'vendedor'}:
+		if data.get('user_type'):
 			user.user_type = data['user_type']
-		elif data.get('user_type') is not None:
-			return {"message": "El tipo de usuario no es válido ('normal', 'vendedor')."}, 400
 
 		user.first_name = data['first_name']
 		user.last_name = data['last_name']
 		user.email = data['email']
 		user.save_to_db()
 
-		return user.json()
+		return user.json(True)
 
 	@jwt_required()
 	def delete(self, user_id: int):
@@ -76,8 +73,30 @@ class User(Resource):
 		user = UserModel.find_by_id(user_id)
 		if user:
 			user.delete_from_db()
-			return {"message": "Usuario borrado correctamente."}
-		return {"message": "El usuario indicado no existe."}, 404
+			return {"message": f"Usuario con ID {user_id!r} borrado correctamente."}
+		return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
+
+class UserPicture(Resource):
+	"""
+	Esta clase permite modificar la imagen de perfil del usuario.
+	"""
+	parser = reqparse.RequestParser()
+	parser.add_argument('picture', type = str, required = True, help = 'La imagen es requerida (base64 o null).')
+
+	@jwt_required()
+	def put(self, user_id: int):
+		if current_identity.id != user_id:
+			return {"message": "No tiene permitido modificar la imagen de perfil de la cuenta."}, 401
+
+		data = UserPicture.parser.parse_args()
+		user = UserModel.find_by_id(user_id)
+
+		if data['picture'] is not None and base64Regex.match(data['picture']) is None:
+			return {"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}, 400
+
+		user.picture = data['picture']
+		user.save_to_db()
+		return user.json()
 
 class UserRegistration(Resource):
 	"""
@@ -111,4 +130,4 @@ class UserRegistration(Resource):
 		new_user = UserModel(data['first_name'], data['last_name'], data['email'], hashed_password)
 		new_user.save_to_db()
 
-		return new_user.json(), 201
+		return new_user.json(True), 201
