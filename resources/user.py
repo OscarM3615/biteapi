@@ -2,8 +2,6 @@
 Este módulo contiene las clases necesarias para permitir el acceso a los datos de usuarios.
 """
 
-import re
-
 import bcrypt
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
@@ -19,7 +17,11 @@ class User(Resource):
 	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
-	parser.add_argument('user_type', type = str, help = 'Solo un administrador puede cambiar este atributo.')
+	parser.add_argument('user_type',
+		type = str,
+		choices = ('normal', 'vendedor'),
+		help = 'El tipo de usuario puede ser: (\'normal\', \'vendedor\').'
+	)
 
 	def get(self, user_id: int):
 		"""
@@ -50,10 +52,8 @@ class User(Resource):
 		if UserModel.find_by_email(data['email']) and user.email != data['email']:
 			return {"message": "El correo proporcionado ya pertenece a una cuenta registrada."}, 400
 
-		if data.get('user_type') in {'normal', 'vendedor'}:
+		if data.get('user_type'):
 			user.user_type = data['user_type']
-		elif data.get('user_type') is not None:
-			return {"message": "El tipo de usuario no es válido ('normal', 'vendedor')."}, 400
 
 		user.first_name = data['first_name']
 		user.last_name = data['last_name']
