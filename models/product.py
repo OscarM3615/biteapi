@@ -38,13 +38,25 @@ class ProductModel(db.Model):
 		"""
 		return {
 			"product_id": self.product_id,
-			"user_id": self.user.json(),
+			"user": self.user.json(),
 			"category": self.category.json(),
 			"name": self.name,
 			"description": self.description,
 			"price": self.price,
 			"image": self.image
 		}
+
+	@classmethod
+	def find_by_id(cls, product_id: int):
+		return cls.query.filter_by(product_id = product_id).first()
+
+	@classmethod
+	def get_by_user(cls, user_id: int):
+		return cls.query.filter_by(user_id = user_id).all()
+
+	@classmethod
+	def get_visibles(cls):
+		return cls.query.filter_by(visible = True).all()
 
 	def save_to_db(self):
 		"""
@@ -59,15 +71,3 @@ class ProductModel(db.Model):
 		"""
 		db.session.delete(self)
 		db.session.commit()
-
-	@classmethod
-	def find_by_id(cls, product_id: int):
-		return cls.query.filter_by(product_id = product_id).first()
-
-	@classmethod
-	def get_by_user(cls, user_id: int):
-		return cls.query.filter_by(user_id = user_id).all()
-
-	@classmethod
-	def get_visibles(cls):
-		return cls.query.filter_by(visible = True).all()
