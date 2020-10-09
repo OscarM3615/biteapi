@@ -19,6 +19,9 @@ class ReportModel(db.Model):
 		self.comment = comment
 	
 	def json(self):
+		"""
+		Devuelve el reporte en formato JSON.
+		"""
 		return {
 			"report_id": self.report_id,
 			"comment": self.comment,

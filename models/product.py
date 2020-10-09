@@ -33,6 +33,9 @@ class ProductModel(db.Model):
 		self.visible = True
 
 	def json(self):
+		"""
+		Devuelve el producto en formato JSON.
+		"""
 		return {
 			"product_id": self.product_id,
 			"user_id": self.user.json(),

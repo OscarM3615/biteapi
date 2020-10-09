@@ -19,6 +19,9 @@ class CategoryModel(db.Model):
 		self.name = name
 
 	def json(self):
+		"""
+		Devuelve la categoría en formato JSON.
+		"""
 		return {
 			"category_id": self.category_id,
 			"name": self.name
