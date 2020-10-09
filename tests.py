@@ -3,6 +3,16 @@ Pruebas unitarias para comprobar que las expresiones regulares funcionan como es
 """
 
 from unittest import TestCase, main as tests_main
+
+from app import app
+from models.category import CategoryModel
+from models.favourite import FavouriteModel
+from models.opinion import OpinionModel
+from models.order import OrderModel
+from models.product import ProductModel
+from models.report import ReportModel
+from models.user import UserModel
+from db import db
 from regex import identityRegex, emailRegex, passwordRegex, base64Regex
 
 class TestRegex(TestCase):
@@ -78,5 +88,45 @@ class TestRegex(TestCase):
 		"""Rechazar cadenas de base64 que no sean imágenes."""
 		self.assertIsNone(base64Regex.match('data:text/html;base64,R0lGODlhPQBEAPeoAJosM//AwO/AwHVYZ/z595kzAP/s7P+goOXMv8+fhw/v739/f+8PD98fH/8mJl+fn/9ZWb8/PzWlwv///6wWGbImAPgTEMImIN9gUFCEm/gDALULDN8PAD6atYdCTX9gUNKlj8wZAKUsAOzZz+UMAOsJAP/Z2ccMDA8PD/95eX5NWvsJCOVNQPtfX/8zM8+QePLl38MGBr8JCP+zs9myn=='))
 
+class TestCategory(TestCase):
+	"""
+	Comprobar que los métodos de CategoryModel funcionan correctamente.
+	"""
+
+	def crear_category(self):
+		"""Devuelve un objeto CategoryModel."""
+		category = CategoryModel('Test Category')
+		category.save_to_db()
+		return category
+
+	def test_tiene_id(self):
+		"""Verificar que los objetos *Model adquieren ID al almacenarse."""
+		category = self.crear_category()
+		self.assertIsInstance(category.category_id, int)
+		category.delete_from_db()
+
+	def test_json(self):
+		"""Verificar que json contenga los datos necesarios."""
+		category = self.crear_category()
+		category_json = category.json()
+
+		self.assertIsNotNone(category_json.get('category_id'))
+		self.assertIsNotNone(category_json.get('name'))
+
+		category.delete_from_db()
+
+	def test_find_by_name(self):
+		"""Comprobar que puede encontrar objetos por nombre."""
+		category = self.crear_category()
+		self.assertIsInstance(CategoryModel.find_by_name('Test Category'), CategoryModel)
+		category.delete_from_db()
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = '05d08a3aa04b7283bba6ebf3'
+
+db.init_app(app)
+
 if __name__ == '__main__':
-	tests_main()
+	with app.app_context():
+		tests_main()
