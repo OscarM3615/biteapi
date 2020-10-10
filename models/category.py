@@ -36,10 +36,16 @@ class CategoryModel(db.Model):
 
 	@classmethod
 	def find_by_name(cls, name: str):
+		"""
+		Devuelve un objeto CategoryModel con base en su nombre.
+		"""
 		return cls.query.filter_by(name = name).first()
 
 	@classmethod
 	def get_all(cls):
+		"""
+		Devuelve la lista de categorías existentes.
+		"""
 		return cls.query.all()
 
 	def save_to_db(self):

@@ -48,14 +48,23 @@ class ProductModel(db.Model):
 
 	@classmethod
 	def find_by_id(cls, product_id: int):
+		"""
+		Devuelve un objeto ProductModel con base en su ID.
+		"""
 		return cls.query.filter_by(product_id = product_id).first()
 
 	@classmethod
 	def get_by_user(cls, user_id: int):
+		"""
+		Devuelve una lista de productos que pertenezcan al usuario.
+		"""
 		return cls.query.filter_by(user_id = user_id).all()
 
 	@classmethod
 	def get_visibles(cls):
+		"""
+		Devuelve una lista de productos con el atributo visible en True.
+		"""
 		return cls.query.filter_by(visible = True).all()
 
 	def save_to_db(self):

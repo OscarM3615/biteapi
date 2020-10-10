@@ -30,10 +30,16 @@ class ReportModel(db.Model):
 
 	@classmethod
 	def find_by_id(cls, report_id: int):
+		"""
+		Devuelve un objeto ReportModel con base en su ID.
+		"""
 		return cls.query.filter_by(report_id = report_id).first()
 
 	@classmethod
 	def get_all(cls):
+		"""
+		Devuelve una lista de objetos ReportModel con los reportes existentes.
+		"""
 		return cls.query.all()
 
 	def save_to_db(self):
