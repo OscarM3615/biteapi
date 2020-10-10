@@ -60,7 +60,7 @@ class User(Resource):
 		user.email = data['email']
 		user.save_to_db()
 
-		return user.json(True)
+		return user.json()
 
 	@jwt_required()
 	def delete(self, user_id: int):
@@ -130,4 +130,4 @@ class UserRegistration(Resource):
 		new_user = UserModel(data['first_name'], data['last_name'], data['email'], hashed_password)
 		new_user.save_to_db()
 
-		return new_user.json(True), 201
+		return new_user.json(), 201

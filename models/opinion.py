@@ -20,6 +20,25 @@ class OpinionModel(db.Model):
 		self.rating = rating
 		self.comment = comment
 
+	def json(self):
+		"""
+		Devuelve la opinión en formato JSON.
+		"""
+		return {
+			"opinion_id": self.opinion_id,
+			"product_id": self.product_id,
+			"rating": self.rating,
+			"comment": self.comment
+		}
+
+	@classmethod
+	def find_by_id(cls, opinion_id: int):
+		return cls.query.filter_by(opinion_id = opinion_id).first()
+
+	@classmethod
+	def get_by_product(cls, product_id: int):
+		return cls.query.filter_by(product_id = product_id).all()
+
 	def save_to_db(self):
 		"""
 		Guarda la opinión en la base de datos. No puede ser actualizada, aunque el método lo permita.

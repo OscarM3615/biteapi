@@ -19,6 +19,9 @@ class CategoryModel(db.Model):
 		self.name = name
 
 	def json(self):
+		"""
+		Devuelve la categoría en formato JSON.
+		"""
 		return {
 			"category_id": self.category_id,
 			"name": self.name
@@ -33,10 +36,16 @@ class CategoryModel(db.Model):
 
 	@classmethod
 	def find_by_name(cls, name: str):
+		"""
+		Devuelve un objeto CategoryModel con base en su nombre.
+		"""
 		return cls.query.filter_by(name = name).first()
 
 	@classmethod
 	def get_all(cls):
+		"""
+		Devuelve la lista de categorías existentes.
+		"""
 		return cls.query.all()
 
 	def save_to_db(self):
