@@ -1,5 +1,5 @@
 """
-Este módulo contiene la clase para hacer cambios sobre las órdenes en la base de datos.
+Este módulo contiene la clase para hacer cambios sobre los pedidos en la base de datos.
 """
 
 from datetime import datetime
@@ -7,7 +7,7 @@ from db import db
 
 class OrderModel(db.Model):
 	"""
-	La orden es generada cuando un usuario pide el producto de un vendedor.
+	El pedido es generado cuando un usuario pide el producto de un vendedor.
 	"""
 	__tablename__ = 'Orders'
 
@@ -28,18 +28,53 @@ class OrderModel(db.Model):
 		self.location = location
 		self.amount = amount
 		self.comment = comment
-		self.status = 'Pendiente'
+		self.status = 'pendiente'
+
+	def json(self):
+		"""
+		Devuelve el pedido en formato JSON.
+		"""
+		return {
+			"customer": self.customer.json(),
+			"product": self.product.json(),
+			"location": self.location,
+			"amount": self.amount,
+			"comment": self.comment,
+			"status": self.status,
+			"order_time": str(self.order_time)
+		}
+
+	@classmethod
+	def find_by_id(cls, order_id: int):
+		"""
+		Devuelve un objeto OrderModel con base en su ID.
+		"""
+		return cls.query.filter_by(order_id = order_id).first()
+
+	@classmethod
+	def get_by_customer(cls, customer_id: int):
+		"""
+		Devuelve la lista de pedidos que ha realizado un usuario normal.
+		"""
+		return cls.query.filter_by(customer_id = customer_id).all()
+
+	@classmethod
+	def get_by_vendor(cls, vendor_id: int):
+		"""
+		Devuelve la lista de pedidos que tiene por hacer un vendedor.
+		"""
+		return cls.query.filter_by(vendor_id = vendor_id).all()
 
 	def save_to_db(self):
 		"""
-		Permite guardar o actualizar los detalles de la orden en la base de datos.
+		Permite guardar o actualizar los detalles del pedido en la base de datos.
 		"""
 		db.session.add(self)
 		db.session.commit()
 
 	def delete_from_db(self):
 		"""
-		Elimina la orden de la base de datos.
+		Elimina el pedido de la base de datos.
 		"""
 		db.session.delete(self)
 		db.session.commit()
