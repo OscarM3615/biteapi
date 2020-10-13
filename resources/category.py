@@ -10,6 +10,7 @@ class Category(Resource):
 	"""
 	Esta clase maneja los métodos HTTP para modificar categorías.
 	"""
+	@jwt_required()
 	def get(self, category_id: int):
 		"""
 		Obtener los datos de una categoría.
@@ -41,6 +42,7 @@ class CategoryList(Resource):
 	parser = reqparse.RequestParser()
 	parser.add_argument('name', type = str, required = True, help = 'El nombre de la categoría es requerido.')
 
+	@jwt_required()
 	def get(self):
 		"""
 		Obtener la lista de categorías existentes.

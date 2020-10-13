@@ -23,6 +23,7 @@ class User(Resource):
 		help = 'El tipo de usuario puede ser: (\'normal\', \'vendedor\').'
 	)
 
+	@jwt_required()
 	def get(self, user_id: int):
 		"""
 		Obtener los datos del usuario. Se le permite a cualquiera.
