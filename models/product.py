@@ -61,11 +61,18 @@ class ProductModel(db.Model):
 		return cls.query.filter_by(user_id = user_id).all()
 
 	@classmethod
-	def get_visibles(cls):
+	def get_all(cls, vendor_id: int = None, category_id: int = None, search: str = None):
 		"""
 		Devuelve una lista de productos con el atributo visible en True.
 		"""
-		return cls.query.filter_by(visible = True).all()
+		results = cls.query.filter_by(visible = True)
+		if vendor_id:
+			results = results.filter_by(user_id = vendor_id)
+		if category_id:
+			results = results.filter_by(category_id = category_id)
+		if search:
+			results = results.filter(cls.name.like(f'%{search}%'))
+		return results.all()
 
 	def save_to_db(self):
 		"""
