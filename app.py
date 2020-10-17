@@ -14,7 +14,7 @@ from resources.category import Category, CategoryList
 from resources.favourite import Favourite
 from resources.opinion import Opinion, OpinionList
 from resources.order import Order, OrderList
-from resources.product import Product, ProductList
+from resources.product import Product, ProductList, ProductStock
 from resources.report import Report, ReportList
 from resources.user import User, UserPicture, UserRegistration
 from security import authenticate, identity
@@ -51,6 +51,7 @@ api.add_resource(OrderList, '/orders')
 api.add_resource(Order, '/orders/<int:order_id>')
 api.add_resource(ProductList, '/products')
 api.add_resource(Product, '/products/<int:product_id>')
+api.add_resource(ProductStock, '/users/<int:user_id>/products')
 api.add_resource(OpinionList, '/products/<int:product_id>/opinions')
 api.add_resource(Opinion, '/products/<int:product_id>/opinions/<int:opinion_id>')
 api.add_resource(ReportList, '/reports')

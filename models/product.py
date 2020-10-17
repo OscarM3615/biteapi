@@ -43,7 +43,8 @@ class ProductModel(db.Model):
 			"name": self.name,
 			"description": self.description,
 			"price": self.price,
-			"image": self.image
+			"image": self.image,
+			"visible": self.visible
 		}
 
 	@classmethod
