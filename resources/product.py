@@ -116,3 +116,16 @@ class ProductList(Resource):
 		new_product.save_to_db()
 
 		return new_product.json(), 201
+
+class ProductStock(Resource):
+	"""
+	Esta clase se encarga de los métodos que devuelvan los productos de un vendedor.
+	"""
+	@jwt_required()
+	def get(self, user_id: int):
+		"""
+		Devuelve la lista de productos de un vendedor, sean visibles o no. Solo lo puede realizar el mismo vendedor.
+		"""
+		if current_identity.id != user_id:
+			return {"message": "No tiene permitido consultar la lista de productos."}, 401
+		return [product.json() for product in ProductModel.get_by_user(user_id)]
