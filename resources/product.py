@@ -86,12 +86,18 @@ class ProductList(Resource):
 	parser.add_argument('price', type = float, required = True, help = 'El precio es requerido.')
 	parser.add_argument('image', type = str, required = True, help = 'La imagen es requerida.')
 
+	args = reqparse.RequestParser()
+	args.add_argument('vendor_id', type = int, location = 'args')
+	args.add_argument('category_id', type = int, location = 'args')
+	args.add_argument('search', type = str, location = 'args')
+
 	@jwt_required()
 	def get(self):
 		"""
 		Devuelve la lista de productos existentes.
 		"""
-		return [product.json() for product in ProductModel.get_visibles()]
+		data = ProductList.args.parse_args()
+		return [product.json() for product in ProductModel.get_all(**data)]
 
 	@jwt_required()
 	def post(self):
