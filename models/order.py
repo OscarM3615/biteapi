@@ -35,6 +35,7 @@ class OrderModel(db.Model):
 		Devuelve el pedido en formato JSON.
 		"""
 		return {
+			"order_id": self.order_id,
 			"customer": self.customer.json(),
 			"product": self.product.json(),
 			"location": self.location,
