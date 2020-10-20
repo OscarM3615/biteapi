@@ -33,10 +33,16 @@ class OpinionModel(db.Model):
 
 	@classmethod
 	def find_by_id(cls, opinion_id: int):
+		"""
+		Devuelve los detalles de una opinión con base en su ID.
+		"""
 		return cls.query.filter_by(opinion_id = opinion_id).first()
 
 	@classmethod
 	def get_by_product(cls, product_id: int):
+		"""
+		Devuelve la lista de opiniones hechas sobre un producto.
+		"""
 		return cls.query.filter_by(product_id = product_id).all()
 
 	def save_to_db(self):
