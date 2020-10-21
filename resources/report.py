@@ -4,8 +4,10 @@ Este módulo contiene las clases necesarias para permitir el acceso a los datos 
 
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
+
 from models.report import ReportModel
 from models.user import UserModel
+from constants import user_types
 
 class Report(Resource):
 	"""
@@ -16,7 +18,7 @@ class Report(Resource):
 		"""
 		Devuelve los datos de un reporte específico, incluyendo los datos del usuario reportado. Solo admins.
 		"""
-		if current_identity.user_type != 'admin':
+		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido consultar reportes."}, 401
 		
 		report = ReportModel.find_by_id(report_id)
@@ -29,7 +31,7 @@ class Report(Resource):
 		"""
 		Elimina un reporte de la base de datos. Solo admins.
 		"""
-		if current_identity.user_type != 'admin':
+		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido eliminar reportes."}, 401
 
 		report = ReportModel.find_by_id(report_id)
@@ -52,7 +54,7 @@ class ReportList(Resource):
 		"""
 		Devuelve la lista de reportes, incluyendo los datos del usuario reportado. Solo admins.
 		"""
-		if current_identity.user_type != 'admin':
+		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido consultar reportes."}, 401
 		return [report.json() for report in ReportModel.get_all()]
 

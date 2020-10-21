@@ -23,7 +23,7 @@ class ReportModel(db.Model):
 		Devuelve el reporte en formato JSON.
 		"""
 		return {
-			"report_id": self.report_id,
+			"id": self.report_id,
 			"comment": self.comment,
 			"user": self.user.json()
 		}

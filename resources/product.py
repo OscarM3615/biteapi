@@ -6,6 +6,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from models.product import ProductModel
+from constants import user_types
 from regex import base64Regex
 
 class Product(Resource):
@@ -42,7 +43,7 @@ class Product(Resource):
 		if not product:
 			return {"message": f"El producto con ID {product_id!r} no ha sido encontrado."}, 404
 		
-		if product.user_id != current_identity.id or current_identity.user_type != 'vendedor':
+		if product.user_id != current_identity.id or current_identity.user_type != user_types['vendor']:
 			return {"message": "No tiene permitido modificar este producto."}, 401
 
 		data = Product.parser.parse_args()
@@ -104,7 +105,7 @@ class ProductList(Resource):
 		"""
 		Agregar un nuevo producto a la base de datos. Permitir solo para vendedores.
 		"""
-		if current_identity.user_type != 'vendedor':
+		if current_identity.user_type != user_types['vendor']:
 			return {"message": "Se requiere ser vendedor para agregar productos."}, 401
 
 		data = ProductList.parser.parse_args()

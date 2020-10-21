@@ -8,6 +8,7 @@ from flask_jwt import jwt_required, current_identity
 
 from models.user import UserModel
 from regex import identityRegex, emailRegex, passwordRegex, base64Regex
+from constants import admitted_users
 
 class User(Resource):
 	"""
@@ -19,8 +20,8 @@ class User(Resource):
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
 	parser.add_argument('user_type',
 		type = str,
-		choices = ('normal', 'vendedor'),
-		help = 'El tipo de usuario puede ser: (\'normal\', \'vendedor\').'
+		choices = admitted_users,
+		help = f'El tipo de usuario puede ser: {admitted_users!r}.'
 	)
 
 	@jwt_required()
@@ -72,10 +73,11 @@ class User(Resource):
 			return {"message": "No tiene permiso para eliminar esta cuenta."}, 401
 
 		user = UserModel.find_by_id(user_id)
-		if user:
-			user.delete_from_db()
-			return {"message": f"Usuario con ID {user_id!r} borrado correctamente."}
-		return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
+		if not user:
+			return {"message": f"El usuario con ID {user_id!r} no existe."}, 404
+
+		user.delete_from_db()
+		return {"message": f"Usuario con ID {user_id!r} borrado correctamente."}
 
 class UserPicture(Resource):
 	"""
@@ -97,6 +99,7 @@ class UserPicture(Resource):
 
 		user.picture = data['picture']
 		user.save_to_db()
+
 		return user.json()
 
 class UserRegistration(Resource):
