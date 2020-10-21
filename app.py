@@ -11,7 +11,7 @@ from flask_restful import Api
 from flask_jwt import JWT
 
 from resources.category import Category, CategoryList
-from resources.favourite import Favourite
+from resources.favourite import Favourite, FavouriteList
 from resources.opinion import Opinion, OpinionList
 from resources.order import Order, OrderList
 from resources.product import Product, ProductList, ProductStock
@@ -54,6 +54,8 @@ api.add_resource(Product, '/products/<int:product_id>')
 api.add_resource(ProductStock, '/users/<int:user_id>/products')
 api.add_resource(OpinionList, '/products/<int:product_id>/opinions')
 api.add_resource(Opinion, '/products/<int:product_id>/opinions/<int:opinion_id>')
+api.add_resource(FavouriteList, '/favourites')
+api.add_resource(Favourite, '/favourites/<int:favourite_id>')
 api.add_resource(ReportList, '/reports')
 api.add_resource(Report, '/reports/<int:report_id>')
 
