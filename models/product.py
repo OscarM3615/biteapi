@@ -37,8 +37,8 @@ class ProductModel(db.Model):
 		Devuelve el producto en formato JSON.
 		"""
 		return {
-			"product_id": self.product_id,
-			"user": self.user.json(),
+			"id": self.product_id,
+			"vendor": self.user.json(),
 			"category": self.category.json(),
 			"name": self.name,
 			"description": self.description,

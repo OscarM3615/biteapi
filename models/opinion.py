@@ -25,7 +25,7 @@ class OpinionModel(db.Model):
 		Devuelve la opinión en formato JSON.
 		"""
 		return {
-			"opinion_id": self.opinion_id,
+			"id": self.opinion_id,
 			"product_id": self.product_id,
 			"rating": self.rating,
 			"comment": self.comment

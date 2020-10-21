@@ -4,8 +4,10 @@ Este módulo contiene las clases necesarias para permitir el acceso a los datos 
 
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
+
 from models.order import OrderModel
 from models.product import ProductModel
+from constants import user_types, admitted_order_states
 
 class Order(Resource):
 	"""
@@ -15,8 +17,8 @@ class Order(Resource):
 	parser.add_argument('status',
 		type = str,
 		required = True,
-		choices = ('finalizado',),
-		help = 'Solo se puede marcar el pedido como \'finalizado\' (no se puede deshacer esta acción).'
+		choices = admitted_order_states,
+		help = f'Solo se puede marcar el pedido como: {admitted_order_states!r}.'
 	)
 
 	@jwt_required()
@@ -82,7 +84,7 @@ class OrderList(Resource):
 		"""
 		Devuelve la lista de pedidos hechos por un usuario, si es vendedor, la lista de pedidos recibidos.
 		"""
-		if current_identity.user_type == 'vendedor':
+		if current_identity.user_type == user_types['vendor']:
 			return [order.json() for order in OrderModel.get_by_vendor(current_identity.id)]
 		return [order.json() for order in OrderModel.get_by_customer(current_identity.id)]
 
@@ -91,7 +93,7 @@ class OrderList(Resource):
 		"""
 		Permite realizar un nuevo pedido, los vendedores no pueden realizarlos.
 		"""
-		if current_identity.user_type == 'vendedor':
+		if current_identity.user_type == user_types['vendor']:
 			return {"message": "No tiene permitido realizar pedidos."}, 401
 
 		data = OrderList.parser.parse_args()

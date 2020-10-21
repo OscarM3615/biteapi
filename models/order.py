@@ -3,7 +3,9 @@ Este módulo contiene la clase para hacer cambios sobre los pedidos en la base d
 """
 
 from datetime import datetime
+
 from db import db
+from constants import order_states
 
 class OrderModel(db.Model):
 	"""
@@ -28,14 +30,14 @@ class OrderModel(db.Model):
 		self.location = location
 		self.amount = amount
 		self.comment = comment
-		self.status = 'pendiente'
+		self.status = order_states['pending']
 
 	def json(self):
 		"""
 		Devuelve el pedido en formato JSON.
 		"""
 		return {
-			"order_id": self.order_id,
+			"id": self.order_id,
 			"customer": self.customer.json(),
 			"product": self.product.json(),
 			"location": self.location,

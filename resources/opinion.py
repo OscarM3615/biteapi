@@ -4,8 +4,10 @@ Este módulo contiene las clases necesarias para permitir el acceso a los datos 
 
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
+
 from models.opinion import OpinionModel
 from models.product import ProductModel
+from constants import user_types, rating_values
 
 class Opinion(Resource):
 	"""
@@ -14,11 +16,8 @@ class Opinion(Resource):
 	@jwt_required()
 	def get(self, product_id: int, opinion_id: int):
 		"""
-		Devuelve los datos de una opinión por separado. Solo se le permite a los admins.
+		Devuelve los datos de una opinión por separado.
 		"""
-		if current_identity.user_type != 'admin':
-			return {"message": "No tiene permitido consultar esta opinión."}, 401
-
 		opinion = OpinionModel.find_by_id(opinion_id)
 		if not opinion:
 			return {"message": f"La opinión con ID {opinion_id!r} no ha sido encontrada."}, 404
@@ -30,7 +29,7 @@ class Opinion(Resource):
 		"""
 		Borra una opinión de un producto por ser inadecuada. Solo pueden hacerlo los admins.
 		"""
-		if current_identity.user_type != 'admin':
+		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido eliminar esta opinión."}, 401
 
 		opinion = OpinionModel.find_by_id(opinion_id)
@@ -49,8 +48,8 @@ class OpinionList(Resource):
 	parser.add_argument('rating',
 		type = int,
 		required = True,
-		choices = (1, 2, 3, 4, 5),
-		help = 'La calificación debe estar entre 1 y 5.'
+		choices = rating_values,
+		help = f'La calificación debe estar entre {rating_values[0]!r} y {rating_values[-1]!r}.'
 	)
 	parser.add_argument('comment', type = str, required = True, help = 'El comentario es requerido.')
 
@@ -68,7 +67,7 @@ class OpinionList(Resource):
 		"""
 		Agrega una opinión a un producto en particular.
 		"""
-		if current_identity.user_type == 'vendedor':
+		if current_identity.user_type == user_types['vendor']:
 			return {"message": "Un vendedor no puede realizar opiniones sobre los productos."}, 401
 
 		if not ProductModel.find_by_id(product_id):

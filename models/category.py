@@ -23,7 +23,7 @@ class CategoryModel(db.Model):
 		Devuelve la categoría en formato JSON.
 		"""
 		return {
-			"category_id": self.category_id,
+			"id": self.category_id,
 			"name": self.name
 		}
 

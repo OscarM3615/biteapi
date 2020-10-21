@@ -4,8 +4,10 @@ Este módulo contiene las clases necesarias para permitir el acceso a los datos 
 
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
+
 from models.favourite import FavouriteModel
 from models.product import ProductModel
+from constants import user_types
 
 class Favourite(Resource):
 	"""
@@ -45,7 +47,7 @@ class FavouriteList(Resource):
 		"""
 		Agrega un nuevo producto a los favoritos del usuario.
 		"""
-		if current_identity.user_type == 'vendedor':
+		if current_identity.user_type == user_types['admin']:
 			return {"message": "No puede marcar un producto como favorito."}, 401
 
 		data = FavouriteList.parser.parse_args()

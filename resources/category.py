@@ -4,12 +4,15 @@ Este módulo contiene las clases necesarias para permitir el acceso a los datos 
 
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
+
 from models.category import CategoryModel
+from constants import user_types
 
 class Category(Resource):
 	"""
 	Esta clase maneja los métodos HTTP para modificar categorías.
 	"""
+	@jwt_required()
 	def get(self, category_id: int):
 		"""
 		Obtener los datos de una categoría.
@@ -24,7 +27,7 @@ class Category(Resource):
 		"""
 		Eliminar una categoría de la base de datos (Solo los admin pueden hacerlo).
 		"""
-		if current_identity.user_type != 'admin':
+		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido eliminar una categoría."}, 401
 
 		category = CategoryModel.find_by_id(category_id)
@@ -41,6 +44,7 @@ class CategoryList(Resource):
 	parser = reqparse.RequestParser()
 	parser.add_argument('name', type = str, required = True, help = 'El nombre de la categoría es requerido.')
 
+	@jwt_required()
 	def get(self):
 		"""
 		Obtener la lista de categorías existentes.
@@ -52,7 +56,7 @@ class CategoryList(Resource):
 		"""
 		Agregar una nueva categoría (Solo los admin pueden hacerlo).
 		"""
-		if current_identity.user_type != 'admin':
+		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido crear nuevas categorías."}, 401
 
 		data = CategoryList.parser.parse_args()

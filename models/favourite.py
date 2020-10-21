@@ -23,7 +23,7 @@ class FavouriteModel(db.Model):
 		Devuelve el favorito en formato JSON.
 		"""
 		return {
-			"favourite_id": self.favourite_id,
+			"id": self.favourite_id,
 			"product": self.product.json()
 		}
 	
