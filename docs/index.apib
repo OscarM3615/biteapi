@@ -1,0 +1,205 @@
+FORMAT: 1A
+HOST: http://127.0.0.1:5000
+
+# Bite API
+
+Bite API permite a los usuarios la compra y venta de productos agregados por ellos mismos.
+
+# Group Autentificación
+::: note
+Todas las rutas, excepto por `/register` y `/login`, requieren que se incluya una JWT por lo que es necesario crear un usuario y autentificarse para poder utilizar la API.
+:::
+
+## Registro de usuarios [/register]
+
+### Registrar usuario [POST]
+Crear un nuevo usuario para interactuar con la API.
+
++ Request (application/json)
+	+ Body
+		```
+		{
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"password": "1234"
+		}
+		```
+
++ Response 201 (application/json)
+Devuelve al mismo usuario para verificar que se guardó correctamente.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": null,
+			"is_active": true
+		}
+		```
+
++ Response 400 (application/json)
+En caso de que el correo ya esté registrado o alguno de los datos no sea válido, se devolverá el mensaje correspondiente.
+	+ Body
+		```
+		{"message": ...}
+		```
+
+## Inicio de sesión [/login]
+
+### Autentificar usuario [POST]
+Obtener una JWT para poder utilizar las demás rutas.
+
++ Request (application/json)
+	+ Body
+		```
+		{
+			"email": "testaccount@hotmail.com",
+			"password": "1234"
+		}
+		```
+
++ Response 200 (application/json)
+El correo y la contraseña son los correctos.
+	+ Body
+		```
+		{
+			"access_token": ...
+		}
+		```
+
++ Response 401 (application/json)
+El correo electrónico o la contraseña son incorrectos.
+	+ Body
+		```
+		{
+			"description": "Invalid credentials",
+			"error": "Bad Request",
+			"status_code": 401
+		}
+		```
+
+# Group Categorías
+
+## Colección de categorías [/categories]
+
+### Obtener categorías [GET]
+Devuelve una lista de las categorías existentes.
+
++ Request
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"name": "Categoría 1"
+			},
+			...
+		]
+		```
+
+### Crear categoría [POST]
+Ingresa una nueva categoría a la base de datos.
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+	+ Body
+		```
+		{
+			"name": "Categoría 1"
+		}
+		```
+
++ Response 201 (application/json)
+La categoría ha sido creada. Devuelve los datos de la categoría.
+	+ Body
+		```
+		{
+			"id": 1,
+			"name": "Categoría 1"
+		}
+		```
+
++ Response 400 (application/json)
+La categoría que se quiere crear ya existe en el sistema.
+	+ Body
+		```
+		{"message": "La categoría 'Categoría 1' ya existe."}
+		```
+
++ Response 401 (application/json)
+El usuario no tiene permitido crear categorías (Solo pueden ser creadas por usuarios administradores).
+	+ Body
+		```
+		{"message": "No tiene permitido crear nuevas categorías."}
+		```
+
+## Categoría [/categories/:category_id]
+
+### Obtener categoría [GET]
+Devuelve una única categoría.
+
++ Request
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+La categoría tiene un ID válido y está registrado en el sistema.
+	+ Body
+		```
+		{
+			"id": 1,
+			"name": "Categoría 1"
+		}
+		```
+
++ Response 404 (application/json)
+La categoría que el usuario busca no se pudo encontrar.
+	+ Body
+		```
+		{"message": "La categoría con ID 1 no ha sido encontrada."}
+		```
+
+### Borrar categoría [DELETE]
+Elimina una categoría.
+
++ Request
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+La categoría se elimina del sistema correctamente.
+	+ Body
+		```
+		{"message": "Categoría con ID 1 eliminada correctamente."}
+		```
+
++ Response 401 (application/json)
+El usuario no cuenta con los permisos para eliminar una categoría (solo los administradores pueden hacerlo).
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar una categoría."}
+		```
+
++ Response 404 (application/json)
+La categoría ingresada según su ID no existe en el sistema.
+	+ Body
+		```
+		{"message": "La categoría no ha sido encontrada."}
+		```
