@@ -5,9 +5,9 @@ HOST: http://127.0.0.1:5000
 
 Bite API permite a los usuarios la compra y venta de productos agregados por ellos mismos.
 
-# Group Autentificación
+# Group Autenticación
 ::: note
-Todas las rutas, excepto por `/register` y `/login`, requieren que se incluya una JWT por lo que es necesario crear un usuario y autentificarse para poder utilizar la API.
+Todas las rutas, excepto por `/register` y `/login`, requieren que se incluya una JWT por lo que es necesario crear un usuario y autenticarse para poder utilizar la API.
 :::
 
 ## Registro de usuarios [/register]
@@ -50,7 +50,7 @@ En caso de que el correo ya esté registrado o alguno de los datos no sea válid
 
 ## Inicio de sesión [/login]
 
-### Autentificar usuario [POST]
+### Autenticar usuario [POST]
 Obtener una JWT para poder utilizar las demás rutas.
 
 + Request (application/json)
@@ -203,3 +203,156 @@ La categoría ingresada según su ID no existe en el sistema.
 		```
 		{"message": "La categoría no ha sido encontrada."}
 		```
+
+# Group Favoritos
+
+## Colección de Favoritos [/favourites]
+
+### Obtener favoritos [GET]
+Devuelve la lista de los productos favoritos del usuario.
+
++ Request
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"product": {
+					"id": 1,
+					"vendor": {...},
+					"category": {...},
+					"name": "Producto 1",
+					"description": "Descripción del producto 1",
+					"price": 50.0,
+					"image": "data:image/png;base64...",
+					"visible": true
+				}
+			},
+			...
+		]
+		```
+
+### Agregar favorito [POST]
+Agrega a la lista de favoritos del usuario un producto si no ha sido agregado aún.
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+	+ Body
+		```
+		{
+			"product_id": 1
+		}
+		```
+
++ Response 200 (application/json)
+El producto ha sido marcado como favorito para el usuario.
+	+ Body
+		```
+		{
+			"id": 1,
+			"product": {
+				"id": 1,
+				"vendor": {...},
+				"category": {...},
+				"name": "Producto 1",
+				"description": "Descripción del producto 1",
+				"price": 50.0,
+				"image": "data:image/png;base64...",
+				"visible": true
+			}
+		}
+		```
+
++ Response 400 (application/json)
+El producto ya estaba marcado como favorito, no puede ser marcado de nuevo.
+	+ Body
+		```
+		{"message": "El producto con ID 1 ya está marcado como favorito."}
+		```
+
++ Response 401 (application/json)
+El usuario no tiene permiso para agregar favoritos (los vendedores no pueden realizarlo).
+	+ Body
+		```
+		{"message": "No puede marcar un producto como favorito."}
+		```
+
++ Response 404 (application/json)
+El producto no pudo ser encontrado con el ID que se proporcionó en la petición.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
+
+## Favorito [/favourites/:favourite_id]
+
+### Eliminar favorito [DELETE]
+Permite quitar un producto de los favoritos del usuario. No elimina el producto del vendedor.
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+El producto se elimina correctamente de la lista de favoritos.
+	+ Body
+		```
+		{"message": "Favorito con ID 1 eliminado correctamente."}
+		```
+
++ Response 401 (application/json)
+El usuario no puede eliminar el favorito porque le pertenece a otro usuario.
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar este favorito."}
+		```
+
++ Response 404 (application/json)
+El registro del favorito no pudo ser encontrado con el ID indicado en la petición.
+	+ Body
+		```
+		{"message": "El favorito con ID 1 no ha sido encontrado."}
+		```
+
+# Group Opiniones
+
+## Colección de Opiniones [/products/:product_id/opinions]
+
+## Opinión [/products/:product_id/opinions/:opinion_id]
+
+# Group Pedidos
+
+## Colección de Pedidos [/orders]
+
+## Pedido [/orders/:order_id]
+
+# Group Productos
+
+## Colección de productos [/products]
+
+## Producto [/products/:product_id]
+
+## Inventario [/users/:user_id/products]
+
+# Group Reportes
+
+## Colección de Reportes [/reports]
+
+## Reporte [/reports/:report_id]
+
+# Group Usuarios
+
+## Datos del usuario [/users/:user_id]
+
+## Imagen del usuario [/users/:user_id/picture]
