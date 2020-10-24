@@ -329,30 +329,336 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ## Colecci처n de Opiniones [/products/:product_id/opinions]
 
+### Obtener opiniones [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 404 (application/json)
+
+### Crear opini처n [POST]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 201 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
 ## Opini처n [/products/:product_id/opinions/:opinion_id]
+
+### Obtener opini처n [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 404 (application/json)
+
+### Borrar opini처n [DELETE]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
 
 # Group Pedidos
 
 ## Colecci처n de Pedidos [/orders]
 
+### Obtener pedidos [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
+### Crear pedido [POST]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 201 (application/json)
+
++ Response 400 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
 ## Pedido [/orders/:order_id]
+
+### Obtener pedido [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
+### Completar pedido [PUT]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
+### Cancelar pedido [DELETE]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
 
 # Group Productos
 
 ## Colecci처n de productos [/products]
 
+### Buscar productos [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
+### Crear producto [POST]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 201 (application/json)
+
++ Response 400 (application/json)
+
++ Response 401 (application/json)
+
 ## Producto [/products/:product_id]
 
+### Obtener producto [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
+### Modificar producto [PUT]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
+### Eliminar producto [DELETE]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
 ## Inventario [/users/:user_id/products]
+
+### Obtener inventario [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
 
 # Group Reportes
 
 ## Colecci처n de Reportes [/reports]
 
+### Obtener reportes [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
+### Generar reporte [POST]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 201 (application/json)
+
++ Response 404 (application/json)
+
 ## Reporte [/reports/:report_id]
+
+### Obtener reporte [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
+### Eliminar reporte [DELETE]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
 
 # Group Usuarios
 
 ## Datos del usuario [/users/:user_id]
 
+### Obtener usuario [GET]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 404 (application/json)
+
+### Modificar datos [PUT]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+
++ Response 401 (application/json)
+
+### Eliminar usuario [DELETE]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 401 (application/json)
+
++ Response 404 (application/json)
+
 ## Imagen del usuario [/users/:user_id/picture]
+
+### Actualizar imagen [PUT]
+
++ Request (application/json)
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+
++ Response 401 (application/json)
