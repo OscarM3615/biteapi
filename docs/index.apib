@@ -82,6 +82,35 @@ El correo electrónico o la contraseña son incorrectos.
 		}
 		```
 
+## Usuario actual [/me]
+
+### Obtener usuario actual [GET]
+Devuelve los datos del usuario al que representa la JWT.
+
+::: warning
+En caso de que no se proporcione una JWT o que esta haya expirado, se devolverá un error de autenticación.
+:::
+
++ Request
+	+ Headers
+		```
+		Authorization: JWT {{access_token}}
+		```
+
++ Response 200 (application/json)
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": null,
+			"is_active": true
+		}
+		```
+
 # Group Categorías
 
 ## Colección de categorías [/categories]
@@ -330,58 +359,138 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 ## Colección de Opiniones [/products/:product_id/opinions]
 
 ### Obtener opiniones [GET]
+Devuelve la lista de opiniones realizadas sobre un producto en particular.
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
 
 + Response 200 (application/json)
+El producto existe, por lo que se devuelve una lista con las opiniones.
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"product_id": 1,
+				"rating": 4,
+				"comment": "Comentarios sobre el producto."
+			},
+			...
+		]
+		```
 
 + Response 404 (application/json)
+El producto no se pudo encontrar con el ID proporcionado, por lo que devuelve un mensaje de error.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ### Crear opinión [POST]
+Crea una opinión sobre un producto existente.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"id": 1,
+			"product_id": 1,
+			"rating": 4,
+			"comment": "Comentarios sobre el producto."
+		}
+		```
 
 + Response 201 (application/json)
+La opinión sobre el producto ha sido publicada.
+	+ Body
+		```
+		{
+			"id": 1,
+			"product_id": 1,
+			"rating": 4,
+			"comment": "Comentarios sobre el producto."
+		}
+		```
 
 + Response 401 (application/json)
+El usuario no tiene permiso para realizar opiniones. Los vendedores no pueden opinar sobre los productos.
+	+ Body
+		```
+		{"message": "Un vendedor no puede realizar opiniones sobre los productos."}
+		```
 
 + Response 404 (application/json)
+El producto sobre el que se quiere opinar no se ha podido encontrar según el ID indicado.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ## Opinión [/products/:product_id/opinions/:opinion_id]
 
 ### Obtener opinión [GET]
+Devuelve los datos de una opinión en concreto.
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
 
 + Response 200 (application/json)
+La opinión existe, así que se devuelven sus datos.
+	+ Body
+		```
+		{
+			"id": 1,
+			"product_id": 1,
+			"rating": 4,
+			"comment": "Comentarios sobre el producto."
+		}
+		```
 
 + Response 404 (application/json)
+La opinión no ha sido encontrada, por lo que se devuelve un mensaje de error.
+	+ Body
+		```
+		{"message": "La opinión con ID 1 no ha sido encontrada."}
+		```
 
 ### Borrar opinión [DELETE]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
 
 + Response 200 (application/json)
+La opinión fue removida con éxito del sistema. Notifica lo sucedido.
+	+ Body
+		```
+		{"message": "Opinión con ID 1 eliminada correctamente."}
+		```
 
 + Response 401 (application/json)
+El usuario no cumple con el permiso para eliminar opiniones. Solo los administradores tienen permitido hacerlo.
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar esta opinión."}
+		```
 
 + Response 404 (application/json)
+La opinión no pudo encontrarse utilizando el ID de la URI.
+	+ Body
+		```
+		{"message": "La opinión con ID 1 no ha sido encontrada."}
+		```
 
 # Group Pedidos
 
@@ -389,7 +498,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener pedidos [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -417,7 +526,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener pedido [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -445,7 +554,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Cancelar pedido [DELETE]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -463,7 +572,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Buscar productos [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -489,7 +598,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener producto [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -519,7 +628,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Eliminar producto [DELETE]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -535,7 +644,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener inventario [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -551,7 +660,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener reportes [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -577,7 +686,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener reporte [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -591,7 +700,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Eliminar reporte [DELETE]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -609,7 +718,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Obtener usuario [GET]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
@@ -635,7 +744,7 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 ### Eliminar usuario [DELETE]
 
-+ Request (application/json)
++ Request
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
