@@ -464,6 +464,7 @@ La opinión no ha sido encontrada, por lo que se devuelve un mensaje de error.
 		```
 
 ### Borrar opinión [DELETE]
+Elimina una opinión si resulta ofensiva o no es adecuada. Solo los administradores pueden realizarlo.
 
 + Request
 	+ Headers
@@ -497,6 +498,11 @@ La opinión no pudo encontrarse utilizando el ID de la URI.
 ## Colección de Pedidos [/orders]
 
 ### Obtener pedidos [GET]
+Muestra una lista de los pedidos. Si el usuario es vendedor, se le muestran los pedidos que tiene pendientes, de lo contrario, se devuelven los pedidos realizados.
+
+::: note
+El formato del tiempo del pedido es UTC.
+:::
 
 + Request
 	+ Headers
@@ -505,26 +511,81 @@ La opinión no pudo encontrarse utilizando el ID de la URI.
 		```
 
 + Response 200 (application/json)
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"customer": {...},
+				"product": {...},
+				"location": "Destino de entrega",
+				"amount": 1,
+				"comment": "Comentarios a realizar (pueden ser indicaciones)",
+				"status": "pending",
+				"order_time": "2020-10-25 00:43:34.991331"
+			},
+			...
+		]
+		```
 
 ### Crear pedido [POST]
+Se realiza un nuevo pedido sobre un producto. Envía un mensaje de error si el usuario que lo realiza es vendedor.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"product_id": 1,
+			"location": "Destino de entrega",
+			"amount": 1
+		}
+		```
 
 + Response 201 (application/json)
+El pedido ha sido creado, se devuelven los detalles del producto, incluyendo la fecha en que se realizó.
+	+ Body
+		```
+		{
+			"id": 1,
+			"customer": {...},
+			"product": {...},
+			"location": "Destino de entrega",
+			"amount": 1,
+			"comment": "Comentarios a realizar (pueden ser indicaciones)",
+			"status": "pending",
+			"order_time": "2020-10-25 00:43:34.991331"
+		}
+		```
 
 + Response 400 (application/json)
+La cantidad que se indicó en la petición no es aceptada porque debe ser un número positivo.
+	+ Body
+		```
+		{"message": "La cantidad (-1) no es válida."}
+		```
 
 + Response 401 (application/json)
+El usuario no tiene permitido realizar pedidos por ser vendedor.
+	+ Body
+		```
+		{"message": "No tiene permitido realizar pedidos."}
+		```
 
 + Response 404 (application/json)
+El producto no pudo ser encontrado con el ID que se proporcionó en la petición.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ## Pedido [/orders/:order_id]
 
 ### Obtener pedido [GET]
+Se devuelven los detalles de un pedido en particular, solo en caso de que el usuario esté involucrado en él, ya sea como vendedor o como cliente.
 
 + Request
 	+ Headers
@@ -533,26 +594,82 @@ La opinión no pudo encontrarse utilizando el ID de la URI.
 		```
 
 + Response 200 (application/json)
+El usuario está involucrado en el pedido, por lo que puede acceder a los detalles.
+	+ Body
+		```
+		{
+			"id": 1,
+			"customer": {...},
+			"product": {...},
+			"location": "Destino de entrega",
+			"amount": 1,
+			"comment": "Comentarios a realizar (pueden ser indicaciones)",
+			"status": "pending",
+			"order_time": "2020-10-25 00:43:34.991331"
+		}
+		```
 
 + Response 401 (application/json)
+El usuario no está involucrado de ninguna manera con el pedido, por lo que no puede ver los detalles.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar el pedido."}
+		```
 
 + Response 404 (application/json)
+El pedido no pudo ser encontrado con el ID que se proporcionó en la petición.
+	+ Body
+		```
+		{"message": "El pedido con ID 1 no ha sido encontrado."}
+		```
 
 ### Completar pedido [PUT]
+Marca el pedido como finalizado, solo lo puede realizar el vendedor involucrado en el pedido.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"status": "done"
+		}
+		```
 
 + Response 200 (application/json)
+Se devuelven los detalles del pedido, con el campo de estado como finalizado.
+	+ Body
+		```
+		{
+			"id": 1,
+			"customer": {...},
+			"product": {...},
+			"location": "Destino de entrega",
+			"amount": 1,
+			"comment": "Comentarios a realizar (pueden ser indicaciones)",
+			"status": "done",
+			"order_time": "2020-10-25 00:43:34.991331"
+		}
+		```
 
 + Response 401 (application/json)
+El usuario que realizó la petición no es el vendedor del producto, por lo que no puede realizar el cambio.
+	+ Body
+		```
+		{"message": "No tiene permitido finalizar este pedido."}
+		```
 
 + Response 404 (application/json)
+El pedido no pudo ser encontrado con el ID que se indicó.
+	+ Body
+		```
+		{"message": "El pedido con ID 1 no ha sido encontrado."}
+		```
 
 ### Cancelar pedido [DELETE]
+El cliente puede cancelar el pedido si hay un error en este. Se elimina el pedido del sistema para no dejar rastro de él.
 
 + Request
 	+ Headers
@@ -561,10 +678,25 @@ La opinión no pudo encontrarse utilizando el ID de la URI.
 		```
 
 + Response 200 (application/json)
+El usuario es el cliente del pedido, por lo que se borra correctamente.
+	+ Body
+		```
+		{"message": "Pedido con ID 1 eliminado correctamente."}
+		```
 
 + Response 401 (application/json)
+El usuario no es el cliente del pedido, por lo que se le niega el permiso para cancelar el pedido.
+	+ Body
+		```
+		{"message": "No tiene permitido cancelar este pedido."}
+		```
 
 + Response 404 (application/json)
+El pedido no se pudo encontrar con el ID que se proporcionó.
+	+ Body
+		```
+		{"message": "El pedido con ID 1 no ha sido encontrado."}
+		```
 
 # Group Productos
 
