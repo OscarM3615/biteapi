@@ -17,7 +17,7 @@ class ReportModel(db.Model):
 	def __init__(self, user_id: int, comment: str):
 		self.user_id = user_id
 		self.comment = comment
-	
+
 	def json(self):
 		"""
 		Devuelve el reporte en formato JSON.

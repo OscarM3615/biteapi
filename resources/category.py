@@ -33,7 +33,7 @@ class Category(Resource):
 		category = CategoryModel.find_by_id(category_id)
 		if not category:
 			return {"message": "La categoría no ha sido encontrada."}, 404
-		
+
 		category.delete_from_db()
 		return {"message": f"Categoría con ID {category_id!r} eliminada correctamente."}
 

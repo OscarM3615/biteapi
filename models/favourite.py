@@ -26,14 +26,14 @@ class FavouriteModel(db.Model):
 			"id": self.favourite_id,
 			"product": self.product.json()
 		}
-	
+
 	@classmethod
 	def find_by_id(cls, favourite_id: int):
 		"""
 		Devuelve un favorito con base en su ID.
 		"""
 		return cls.query.filter_by(favourite_id = favourite_id).first()
-	
+
 	@classmethod
 	def find_if_exists(cls, user_id: int, product_id: int):
 		"""
