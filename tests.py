@@ -93,7 +93,8 @@ class TestCategory(TestCase):
 	Comprobar que los métodos de CategoryModel funcionan correctamente.
 	"""
 
-	def crear_category(self):
+	@staticmethod
+	def crear_category():
 		"""Devuelve un objeto CategoryModel."""
 		category = CategoryModel('Test Category')
 		category.save_to_db()
@@ -110,7 +111,7 @@ class TestCategory(TestCase):
 		category = self.crear_category()
 		category_json = category.json()
 
-		self.assertIsNotNone(category_json.get('category_id'))
+		self.assertIsNotNone(category_json.get('id'))
 		self.assertIsNotNone(category_json.get('name'))
 
 		category.delete_from_db()
@@ -120,6 +121,23 @@ class TestCategory(TestCase):
 		category = self.crear_category()
 		self.assertIsInstance(CategoryModel.find_by_name('Test Category'), CategoryModel)
 		category.delete_from_db()
+
+class TestUser(TestCase):
+	"""
+	Verificar el correcto funcionamiento de la clase UserModel.
+	"""
+	def test_recovery_key(self):
+		"""Comprobar que la clave de recuperación no cambia a menos que se indique."""
+		user1 = UserModel('Test', 'Account', 'unittest@hotmail.com', '1234')
+		user1.save_to_db()
+		key1 = user1.recovery_key
+
+		user2 = UserModel.find_by_email('unittest@hotmail.com') 
+		key2 = user2.recovery_key
+
+		self.assertEqual(key1, key2)
+
+		user1.delete_from_db()
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

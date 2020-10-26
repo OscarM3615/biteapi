@@ -20,7 +20,7 @@ class Report(Resource):
 		"""
 		if current_identity.user_type != user_types['admin']:
 			return {"message": "No tiene permitido consultar reportes."}, 401
-		
+
 		report = ReportModel.find_by_id(report_id)
 		if not report:
 			return {"message": f"El reporte con ID {report_id!r} no ha sido encontrado."}, 404
@@ -66,7 +66,7 @@ class ReportList(Resource):
 		data = ReportList.parser.parse_args()
 		if not UserModel.find_by_id(data['user_id']):
 			return {"message": f"El usuario con ID {data['user_id']!r} no existe."}, 404
-		
+
 		new_report = ReportModel(**data)
 		new_report.save_to_db()
 

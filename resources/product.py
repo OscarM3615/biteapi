@@ -6,6 +6,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from models.product import ProductModel
+from models.category import CategoryModel
 from constants import user_types
 from regex import base64Regex
 
@@ -29,8 +30,8 @@ class Product(Resource):
 		product = ProductModel.find_by_id(product_id)
 		if not product:
 			return {"message": f"El producto con ID {product_id!r} no ha sido encontrado."}, 404
-		
-		if product.user_id != current_identity.id and product.visible == False:
+
+		if product.user_id != current_identity.id and not product.visible:
 			return {"message": "No tiene permitido visualizar este producto."}, 401
 		return product.json()
 
@@ -42,7 +43,7 @@ class Product(Resource):
 		product = ProductModel.find_by_id(product_id)
 		if not product:
 			return {"message": f"El producto con ID {product_id!r} no ha sido encontrado."}, 404
-		
+
 		if product.user_id != current_identity.id or current_identity.user_type != user_types['vendor']:
 			return {"message": "No tiene permitido modificar este producto."}, 401
 
@@ -50,7 +51,7 @@ class Product(Resource):
 
 		if base64Regex.match(data['image']) is None:
 			return {"message": "La imagen debe ser base64 de tipo imagen."}, 400
-		
+
 		product.category_id = data['category_id']
 		product.name = data['name']
 		product.description = data['description']
@@ -69,10 +70,10 @@ class Product(Resource):
 		product = ProductModel.find_by_id(product_id)
 		if not product:
 			return {"message": f"El producto con ID {product_id!r} no ha sido encontrado."}, 404
-		
+
 		if product.user_id != current_identity.id:
 			return {"message": "No tiene permitido eliminar este producto."}, 401
-		
+
 		product.delete_from_db()
 		return {"message": f"Producto con ID {product_id!r} eliminado correctamente."}
 
@@ -109,6 +110,9 @@ class ProductList(Resource):
 			return {"message": "Se requiere ser vendedor para agregar productos."}, 401
 
 		data = ProductList.parser.parse_args()
+
+		if not CategoryModel.find_by_id(data['category_id']):
+			return {"message": f"La categoría con ID {data['category_id']!r} no ha sido encontrada."}, 404
 
 		if base64Regex.match(data['image']) is None:
 			return {"message": "La imagen debe ser base64 de tipo imagen."}, 400

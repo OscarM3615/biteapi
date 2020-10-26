@@ -88,6 +88,9 @@ class UserPicture(Resource):
 
 	@jwt_required()
 	def put(self, user_id: int):
+		"""
+		Actualiza la imagen del perfil (debe estar en base64).
+		"""
 		if current_identity.id != user_id:
 			return {"message": "No tiene permitido modificar la imagen de perfil de la cuenta."}, 401
 
@@ -110,7 +113,7 @@ class UserRegistration(Resource):
 	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
-	parser.add_argument('password',type = str, required = True, help = 'La contraseña es requerida.')
+	parser.add_argument('password', type = str, required = True, help = 'La contraseña es requerida.')
 
 	def post(self):
 		"""

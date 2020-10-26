@@ -21,10 +21,10 @@ class Favourite(Resource):
 		favourite = FavouriteModel.find_by_id(favourite_id)
 		if not favourite:
 			return {"message": f"El favorito con ID {favourite_id!r} no ha sido encontrado."}, 404
-		
+
 		if favourite.user_id != current_identity.id:
 			return {"message": "No tiene permitido eliminar este favorito."}, 401
-		
+
 		favourite.delete_from_db()
 		return {"message": f"Favorito con ID {favourite_id!r} eliminado correctamente."}
 
@@ -51,7 +51,7 @@ class FavouriteList(Resource):
 			return {"message": "No puede marcar un producto como favorito."}, 401
 
 		data = FavouriteList.parser.parse_args()
-		
+
 		if not ProductModel.find_by_id(data['product_id']):
 			return {"message": f"El producto con ID {data['product_id']!r} no ha sido encontrado."}, 404
 		if FavouriteModel.find_if_exists(current_identity.id, data['product_id']):

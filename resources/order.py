@@ -31,10 +31,10 @@ class Order(Resource):
 			return {"message": f"El pedido con ID {order_id!r} no ha sido encontrado."}, 404
 
 		if order.customer_id != current_identity.id and order.vendor_id != current_identity.id:
-			return {"message": f"No tiene permitido consultar el pedido."}, 401
+			return {"message": "No tiene permitido consultar el pedido."}, 401
 
 		return order.json()
-	
+
 	@jwt_required()
 	def put(self, order_id: int):
 		"""
@@ -53,7 +53,7 @@ class Order(Resource):
 		order.save_to_db()
 
 		return order.json()
-	
+
 	@jwt_required()
 	def delete(self, order_id: int):
 		"""
