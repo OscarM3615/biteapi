@@ -62,18 +62,18 @@ class ProductModel(db.Model):
 		return cls.query.filter_by(user_id = user_id).all()
 
 	@classmethod
-	def get_all(cls, vendor_id: int = None, category_id: int = None, search: str = None):
+	def get_page(cls, page: int, vendor_id: int = None, category_id: int = None, search: str = None):
 		"""
 		Devuelve una lista de productos con el atributo visible en True.
 		"""
-		results = cls.query.filter_by(visible = True)
+		results = cls.query.filter_by(visible = True).order_by(cls.product_id.desc())
 		if vendor_id:
 			results = results.filter_by(user_id = vendor_id)
 		if category_id:
 			results = results.filter_by(category_id = category_id)
 		if search:
 			results = results.filter(cls.name.like(f'%{search}%'))
-		return results.all()
+		return results.paginate(page, 10, False).items
 
 	def save_to_db(self):
 		"""

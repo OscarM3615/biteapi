@@ -704,9 +704,16 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 
 # Group Productos
 
-## Colección de productos [/products]
+## Colección de productos [/products{?page,vendor_id,category_id,search}]
 
 ### Buscar productos [GET]
+Devuelve una lista de 10 productos, para conseguir los siguientes 10 se debe modificar el argumento `page`.
+
++ Parameters
+	+ page: `1` (optional, int) - Página de productos: 1 devolverá los últimos 10 productos, 2 devolverá los 10 anteriores y así sucesivamente.
+	+ vendor_id: `1` (optional, int) - Filtrar los productos por un único vendedor.
+	+ category_id: `1` (optional, int) - Filtrar los productos por una categoría en específico.
+	+ search: `"Producto"` (optional, string) - Agregar un término de búsqueda para filtrar los resultados por lo que desea el usuario.
 
 + Request
 	+ Headers
@@ -717,24 +724,65 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 + Response 200 (application/json)
 
 ### Crear producto [POST]
+Se agrega un nuevo producto al sistema para la compra por parte de los demás usuarios.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"category_id": 1,
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50,
+			"image": "data:image/png;base64..."
+		}
+		```
 
 + Response 201 (application/json)
+El producto ha sido agregado al catálogo del usuario. Se retornan los detalles del producto para verificar que sean correctos.
+	+ Body
+		```
+		{
+			"id": 1,
+			"vendor": {...},
+			"category": {...},
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50.0,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 400 (application/json)
+Si la imagen no cumple con el formato base64 se devolverá un mensaje de error indicando el problema.
+	+ Body
+		```
+		{"message": "La imagen debe ser base64 de tipo imagen."}
+		```
 
 + Response 401 (application/json)
+Si el usuario no es de tipo vendedor se le negará la petición de agregar el producto.
+	+ Body
+		```
+		{"message": "Se requiere ser vendedor para agregar productos."}
+		```
 
 + Response 404 (application/json)
+Si la categoría no puede ser encontrada con el ID indicado se le informará al usuario.
+	+ Body
+		```
+		{"message": "La categoría con ID 1 no ha sido encontrada."}
+		```
 
 ## Producto [/products/:product_id]
 
 ### Obtener producto [GET]
+Devuelve los datos de un producto en específico.
 
 + Request
 	+ Headers
@@ -743,10 +791,34 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Los detalles del producto son devueltos. Incluyendo los datos de la categoría y del vendedor.
+	+ Body
+		```
+		{
+			"id": 1,
+			"vendor": {...},
+			"category": {...},
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50.0,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 401 (application/json)
+Se rechaza la petición porque el producto no está marcado como visible y tampoco es el vendedor de este.
+	+ Body
+		```
+		{"message": "No tiene permitido visualizar este producto."}
+		```
 
 + Response 404 (application/json)
+El producto no pudo ser encontrado por el ID indicado, por lo que se informa el error.
+	+ Body
+		```
+		{"messge": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ### Modificar producto [PUT]
 
@@ -755,16 +827,57 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"category_id": 1,
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 200 (application/json)
+Se regresan los detalles del producto actualizados.
+	+ Body
+		```
+		{
+			"id": 1,
+			"vendor": {...},
+			"category": {...},
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50.0,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 400 (application/json)
+Se rechaza la petición porque la nueva imagen no cumple con el formato de base64.
+	+ Body
+		```
+		{"message": "La imagen debe ser base64 de tipo imagen."}
+		```
 
 + Response 401 (application/json)
+Se niega el permiso de modificar el producto, pues el usuario que lo solicitó no es el vendedor de este.
+	+ Body
+		```
+		{"message": "No tiene permitido modificar este producto."}
+		```
 
 + Response 404 (application/json)
+El producto a modificar no se pudo encontrar usando el ID proporcionado.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ### Eliminar producto [DELETE]
+Eliminar un producto del inventario del usuario y del sistema.
 
 + Request
 	+ Headers
@@ -773,14 +886,30 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El producto fue correctamente eliminado, se devuelve un mensaje de estado.
+	+ Body
+		```
+		{"message": "Producto con ID 1 eliminado correctamente."}
+		```
 
 + Response 401 (application/json)
+Se rechaza la petición para eliminar el producto porque el usuario que lo solicitó no es el vendedor de este.
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar este producto."}
+		```
 
 + Response 404 (application/json)
+El producto a eliminar no pudo ser encontrado utilizando el ID que se proporcionó.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ## Inventario [/users/:user_id/products]
 
 ### Obtener inventario [GET]
+Regresa la lista de los productos que hay en el inventario del usuario vendedor, sean visibles o no.
 
 + Request
 	+ Headers
@@ -789,14 +918,37 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Se devuelve una lista con sus productos agregados.
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"vendor": {...},
+				"category": {...},
+				"name": "Producto 1",
+				"description": "Descripción del producto 1",
+				"price": 50.0,
+				"image": "data:image/png;base64...",
+				"visible": true
+			},
+			...
+		]
+		```
 
 + Response 401 (application/json)
+El usuario está intentando ver el inventario de otro usuario, por lo que se rechaza la petición.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar la lista de productos."}
+		```
 
 # Group Reportes
 
 ## Colección de Reportes [/reports]
 
 ### Obtener reportes [GET]
+Devuelve la lista de reportes de usuarios existentes en el sistema. Solo la pueden pedir los administradores.
 
 + Request
 	+ Headers
@@ -805,24 +957,64 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El usuario es administrador, por lo que se le entrega la lista de reportes.
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"comment": "Comentarios sobre el usuario reportado.",
+				"user": {...}
+			},
+			...
+		]
+		```
 
 + Response 401 (application/json)
+Si el usuario no es administrador, se le devolverá un mensaje de error indicando lo sucedido.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar reportes."}
+		```
 
 ### Generar reporte [POST]
+Se realiza un reporte sobre un usuario, en caso de que haya un comportamineto inadecuado o una situación similar.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"user_id": 1,
+			"comment": "Comentarios sobre el usuario reportado."
+		}
+		```
 
 + Response 201 (application/json)
+Se devuelven los detalles del reporte realizado, incluyendo los datos del usuario involucrado.
+	+ Body
+		```
+		{
+			"id": 1,
+			"comment": "Comentarios sobre el usuario reportado.",
+			"user": {...}
+		}
+		```
 
 + Response 404 (application/json)
+El usuario no pudo ser encontrado con el ID que se proporcionó. Se devuelve un mensaje de error.
+	+ Body
+		```
+		{"message": "El usuario con ID 1 no existe."}
+		```
 
 ## Reporte [/reports/:report_id]
 
 ### Obtener reporte [GET]
+Se devuelven los detalles de un reporte en específico. Solo lo pueden pedir los administradores.
 
 + Request
 	+ Headers
@@ -831,12 +1023,32 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Los detalles del reporte son devueltos, pues el usuario que los pidió es administrador.
+	+ Body
+		```
+		{
+			"id": 1,
+			"comment": "Comentarios sobre el usuario reportado.",
+			"user": {...}
+		}
+		```
 
 + Response 401 (application/json)
+El usuario no es administrador, por lo que se devuelve un mensaje de error.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar reportes."}
+		```
 
 + Response 404 (application/json)
+El reporte requerido no pudo ser encontrado con el ID que se proporcionó.
+	+ Body
+		```
+		{"message": "El reporte con ID 1 no ha sido encontrado."}
+		```
 
 ### Eliminar reporte [DELETE]
+Se elimina el reporte del sistema, pues ya no es necesario porque ya fue atendido.
 
 + Request
 	+ Headers
@@ -845,16 +1057,32 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El reporte fue eliminado correctamente, se informa lo sucedido.
+	+ Body
+		```
+		{"message": "Reporte con ID 1 eliminado correctamente."}
+		```
 
 + Response 401 (application/json)
+El usuario no es administrador, por lo que no puede eliminar los reportes, así que se regresa un mensaje de error.
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar reportes."}
+		```
 
 + Response 404 (application/json)
+El reporte no pudo ser localizado con el ID indicado en la petición.
+	+ Body
+		```
+		{"message": "El reporte con ID 1 no ha sido encontrado."}
+		```
 
 # Group Usuarios
 
 ## Datos del usuario [/users/:user_id]
 
 ### Obtener usuario [GET]
+Se obtienen los datos del usuario, tales como el nombre, su correo y su fotografía.
 
 + Request
 	+ Headers
@@ -863,10 +1091,29 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Se devuelven los datos guardados del usuario, excepto la contraseña.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": null,
+			"is_active": true
+		}
+		```
 
 + Response 404 (application/json)
+El usuario no se pudo localizar con el ID proporcionado, por lo que se informa con un mensaje de error.
+	+ Body
+		```
+		{"message": "El usuario con ID 1 no ha sido encontrado."}
+		```
 
 ### Modificar datos [PUT]
+Actualiza los datos del usuario, tales como el nombre, el correo electrónico y el tipo de usuario.
 
 + Request (application/json)
 	+ Headers
@@ -875,12 +1122,40 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Los datos han sido actualizados correctamente, se devuelve un objeto con los datos actualizados.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": null,
+			"is_active": true
+		}
+		```
 
 + Response 400 (application/json)
+Alguno de los campos por actualizar no es válido, es posible que no cumplan con el formato necesario.
+	+ Body
+		```
+		{"message": ...}
+		```
 
 + Response 401 (application/json)
+El usuario al que pertenece la JWT no es el mismo que se quiere modificar (solo se puede modificar a sí mismo).
+	+ Body
+		```
+		{"message": "No tiene permiso para modificar los datos de esta cuenta."}
+		```
 
 ### Eliminar usuario [DELETE]
+Se borra al usuario del sistema, no se pide confirmación para realizarlo.
+
+::: warning
+Al eliminar un usuario, se borran todos sus productos, pedidos, reportes y toda la actividad realizada por este.
+:::
 
 + Request
 	+ Headers
@@ -889,23 +1164,72 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El usuario ha sido borrado correctamente. Se informa lo sucedido.
+	+ Body
+		```
+		{"message": "Usuario con ID 1 borrado correctamente."}
+		```
 
 + Response 401 (application/json)
+Si el usuario no se está intentando eliminar a sí mismo o no es administrador se rechaza la petición (solo los administradores pueden eliminar cuentas ajenas).
+	+ Body
+		```
+		{"message": "No tiene permiso para eliminar esta cuenta."}
+		```
 
 + Response 404 (application/json)
+No se encontró al usuario con el ID indicado en la petición.
+	+ Body
+		```
+		{"message": "El usuario con ID 1 no existe."}
+		```
 
 ## Imagen del usuario [/users/:user_id/picture]
 
 ### Actualizar imagen [PUT]
+Permite agregar o modificar una foto de perfil al usuario.
+
+::: note
+La imagen proporcionada debe ser una cadena de texto en formato base64 o ser null, en caso de querer removerla.
+:::
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"picture": "data:image/png;base64..."
+		}
+		```
 
 + Response 200 (application/json)
+Se devuelven los datos del usuario, con la imagen ya actualizada.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": "data:image/png;base64...",
+			"is_active": true
+		}
+		```
 
 + Response 400 (application/json)
+Si la imagen no es null o no cumple con el formato de una imagen en base64, se devolverá un mensaje de error.
+	+ Body
+		```
+		{"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}
+		```
 
 + Response 401 (application/json)
+Si el usuario intenta modificar la imagen de otro usuario, se rechazará la petición y se enviará un mensaje de error.
+	+ Body
+		```
+		{"message": "No tiene permitido modificar la imagen de perfil de la cuenta."}
+		```
