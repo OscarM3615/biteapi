@@ -704,9 +704,16 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 
 # Group Productos
 
-## Colección de productos [/products]
+## Colección de productos [/products{?page,vendor_id,category_id,search}]
 
 ### Buscar productos [GET]
+Devuelve una lista de 10 productos, para conseguir los siguientes 10 se debe modificar el argumento `page`.
+
++ Parameters
+	+ page: `1` (optional, int) - Página de productos: 1 devolverá los últimos 10 productos, 2 devolverá los 10 anteriores y así sucesivamente.
+	+ vendor_id: `1` (optional, int) - Filtrar los productos por un único vendedor.
+	+ category_id: `1` (optional, int) - Filtrar los productos por una categoría en específico.
+	+ search: `"Producto"` (optional, string) - Agregar un término de búsqueda para filtrar los resultados por lo que desea el usuario.
 
 + Request
 	+ Headers
