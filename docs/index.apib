@@ -175,10 +175,13 @@ El usuario no tiene permitido crear categorías (Solo pueden ser creadas por usu
 		{"message": "No tiene permitido crear nuevas categorías."}
 		```
 
-## Categoría [/categories/:category_id]
+## Categoría [/categories/{category_id}]
 
 ### Obtener categoría [GET]
 Devuelve una única categoría.
+
++ Parameters
+	+ category_id: `1` (int) - Identificador de la categoría que se quiere obtener.
 
 + Request
 	+ Headers
@@ -209,6 +212,9 @@ Elimina una categoría.
 ::: warning
 Al eliminar una categoría se eliminarán todos los productos ligados a ella.
 :::
+
++ Parameters
+	+ category_id: `1` (int) - Identificador de la categoría que se quiere eliminar.
 
 + Request
 	+ Headers
@@ -326,10 +332,13 @@ El producto no pudo ser encontrado con el ID que se proporcionó en la petición
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Favorito [/favourites/:favourite_id]
+## Favorito [/favourites/{favourite_id}]
 
 ### Eliminar favorito [DELETE]
 Permite quitar un producto de los favoritos del usuario. No elimina el producto del vendedor.
+
++ Parameters
+	+ favourite_id: `1` (int) - Identificador del favorito a eliminar.
 
 + Request (application/json)
 	+ Headers
@@ -360,10 +369,13 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 # Group Opiniones
 
-## Colección de Opiniones [/products/:product_id/opinions]
+## Colección de Opiniones [/products/{product_id}/opinions]
 
 ### Obtener opiniones [GET]
 Devuelve la lista de opiniones realizadas sobre un producto en particular.
+
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto al que pertenecen las opiniones.
 
 + Request
 	+ Headers
@@ -395,6 +407,9 @@ El producto no se pudo encontrar con el ID proporcionado, por lo que devuelve un
 
 ### Crear opinión [POST]
 Crea una opinión sobre un producto existente.
+
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto sobre el que se va a opinar.
 
 + Request (application/json)
 	+ Headers
@@ -437,10 +452,14 @@ El producto sobre el que se quiere opinar no se ha podido encontrar según el ID
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Opinión [/products/:product_id/opinions/:opinion_id]
+## Opinión [/products/{product_id}/opinions/{opinion_id}]
 
 ### Obtener opinión [GET]
 Devuelve los datos de una opinión en concreto.
+
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto al que pertenece la opinión.
+	+ opinion_id: `1` (int) - Identificador de la opinión a obtener.
 
 + Request
 	+ Headers
@@ -469,6 +488,10 @@ La opinión no ha sido encontrada, por lo que se devuelve un mensaje de error.
 
 ### Borrar opinión [DELETE]
 Elimina una opinión si resulta ofensiva o no es adecuada. Solo los administradores pueden realizarlo.
+
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto al que pertenece la opinión.
+	+ opinion_id: `1` (int) - Identificador de la opinión a eliminar.
 
 + Request
 	+ Headers
@@ -586,10 +609,13 @@ El producto no pudo ser encontrado con el ID que se proporcionó en la petición
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Pedido [/orders/:order_id]
+## Pedido [/orders/{order_id}]
 
 ### Obtener pedido [GET]
 Se devuelven los detalles de un pedido en particular, solo en caso de que el usuario esté involucrado en él, ya sea como vendedor o como cliente.
+
++ Parameters
+	+ order_id: `1` (int) - Identificador del pedido a obtener.
 
 + Request
 	+ Headers
@@ -629,6 +655,9 @@ El pedido no pudo ser encontrado con el ID que se proporcionó en la petición.
 
 ### Completar pedido [PUT]
 Marca el pedido como finalizado, solo lo puede realizar el vendedor involucrado en el pedido.
+
++ Parameters
+	+ order_id: `1` (int) - Identificador del pedido a modificar.
 
 + Request (application/json)
 	+ Headers
@@ -674,6 +703,9 @@ El pedido no pudo ser encontrado con el ID que se indicó.
 
 ### Cancelar pedido [DELETE]
 El cliente puede cancelar el pedido si hay un error en este. Se elimina el pedido del sistema para no dejar rastro de él.
+
++ Parameters
+	+ order_id: `1` (int) - Identificador del pedido a eliminar.
 
 + Request
 	+ Headers
@@ -779,10 +811,13 @@ Si la categoría no puede ser encontrada con el ID indicado se le informará al 
 		{"message": "La categoría con ID 1 no ha sido encontrada."}
 		```
 
-## Producto [/products/:product_id]
+## Producto [/products/{product_id}]
 
 ### Obtener producto [GET]
 Devuelve los datos de un producto en específico.
+
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto a obtener.
 
 + Request
 	+ Headers
@@ -821,6 +856,9 @@ El producto no pudo ser encontrado por el ID indicado, por lo que se informa el 
 		```
 
 ### Modificar producto [PUT]
+
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto a modificar.
 
 + Request (application/json)
 	+ Headers
@@ -879,6 +917,9 @@ El producto a modificar no se pudo encontrar usando el ID proporcionado.
 ### Eliminar producto [DELETE]
 Eliminar un producto del inventario del usuario y del sistema.
 
++ Parameters
+	+ product_id: `1` (int) - Identificador del producto a eliminar.
+
 + Request
 	+ Headers
 		```
@@ -906,10 +947,13 @@ El producto a eliminar no pudo ser encontrado utilizando el ID que se proporcion
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Inventario [/users/:user_id/products]
+## Inventario [/users/{user_id}/products]
 
 ### Obtener inventario [GET]
 Regresa la lista de los productos que hay en el inventario del usuario vendedor, sean visibles o no.
+
++ Parameters
+	+ user_id: `1` (int) - Identificador del usuario del cual obtener el inventario.
 
 + Request
 	+ Headers
@@ -1011,10 +1055,13 @@ El usuario no pudo ser encontrado con el ID que se proporcionó. Se devuelve un 
 		{"message": "El usuario con ID 1 no existe."}
 		```
 
-## Reporte [/reports/:report_id]
+## Reporte [/reports/{report_id}]
 
 ### Obtener reporte [GET]
 Se devuelven los detalles de un reporte en específico. Solo lo pueden pedir los administradores.
+
++ Parameters
+	+ report_id: `1` (int) - Identificador del reporte a obtener.
 
 + Request
 	+ Headers
@@ -1050,6 +1097,9 @@ El reporte requerido no pudo ser encontrado con el ID que se proporcionó.
 ### Eliminar reporte [DELETE]
 Se elimina el reporte del sistema, pues ya no es necesario porque ya fue atendido.
 
++ Parameters
+	+ report_id: `1` (int) - Identificador del reporte a eliminar.
+
 + Request
 	+ Headers
 		```
@@ -1079,10 +1129,13 @@ El reporte no pudo ser localizado con el ID indicado en la petición.
 
 # Group Usuarios
 
-## Datos del usuario [/users/:user_id]
+## Datos del usuario [/users/{user_id}]
 
 ### Obtener usuario [GET]
 Se obtienen los datos del usuario, tales como el nombre, su correo y su fotografía.
+
++ Parameters
+	+ user_id: `1` (int) - Identificador del usuario a obtener.
 
 + Request
 	+ Headers
@@ -1114,6 +1167,9 @@ El usuario no se pudo localizar con el ID proporcionado, por lo que se informa c
 
 ### Modificar datos [PUT]
 Actualiza los datos del usuario, tales como el nombre, el correo electrónico y el tipo de usuario.
+
++ Parameters
+	+ user_id: `1` (int) - Identificador del usuario al cual modificar sus datos.
 
 + Request (application/json)
 	+ Headers
@@ -1157,6 +1213,9 @@ Se borra al usuario del sistema, no se pide confirmación para realizarlo.
 Al eliminar un usuario, se borran todos sus productos, pedidos, reportes y toda la actividad realizada por este.
 :::
 
++ Parameters
+	+ user_id: `1` (int) - Identificador del usuario a eliminar.
+
 + Request
 	+ Headers
 		```
@@ -1184,14 +1243,17 @@ No se encontró al usuario con el ID indicado en la petición.
 		{"message": "El usuario con ID 1 no existe."}
 		```
 
-## Imagen del usuario [/users/:user_id/picture]
+## Imagen del usuario [/users/{user_id}/picture]
 
 ### Actualizar imagen [PUT]
 Permite agregar o modificar una foto de perfil al usuario.
 
 ::: note
-La imagen proporcionada debe ser una cadena de texto en formato base64 o ser null, en caso de querer removerla.
+La imagen proporcionada debe ser una cadena de texto en formato base64 o ser `null`, en caso de querer removerla.
 :::
+
++ Parameters
+	+ user_id: `1` (int) - Identificador del usuario al cual actualizar su imagen.
 
 + Request (application/json)
 	+ Headers
