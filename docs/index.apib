@@ -797,6 +797,7 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 ## Colección de Reportes [/reports]
 
 ### Obtener reportes [GET]
+Devuelve la lista de reportes de usuarios existentes en el sistema. Solo la pueden pedir los administradores.
 
 + Request
 	+ Headers
@@ -805,24 +806,64 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El usuario es administrador, por lo que se le entrega la lista de reportes.
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"comment": "Comentarios sobre el usuario reportado.",
+				"user": {...}
+			},
+			...
+		]
+		```
 
 + Response 401 (application/json)
+Si el usuario no es administrador, se le devolverá un mensaje de error indicando lo sucedido.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar reportes."}
+		```
 
 ### Generar reporte [POST]
+Se realiza un reporte sobre un usuario, en caso de que haya un comportamineto inadecuado o una situación similar.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"user_id": 1,
+			"comment": "Comentarios sobre el usuario reportado."
+		}
+		```
 
 + Response 201 (application/json)
+Se devuelven los detalles del reporte realizado, incluyendo los datos del usuario involucrado.
+	+ Body
+		```
+		{
+			"id": 1,
+			"comment": "Comentarios sobre el usuario reportado.",
+			"user": {...}
+		}
+		```
 
 + Response 404 (application/json)
+El usuario no pudo ser encontrado con el ID que se proporcionó. Se devuelve un mensaje de error.
+	+ Body
+		```
+		{"message": "El usuario con ID 1 no existe."}
+		```
 
 ## Reporte [/reports/:report_id]
 
 ### Obtener reporte [GET]
+Se devuelven los detalles de un reporte en específico. Solo lo pueden pedir los administradores.
 
 + Request
 	+ Headers
@@ -831,12 +872,32 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Los detalles del reporte son devueltos, pues el usuario que los pidió es administrador.
+	+ Body
+		```
+		{
+			"id": 1,
+			"comment": "Comentarios sobre el usuario reportado.",
+			"user": {...}
+		}
+		```
 
 + Response 401 (application/json)
+El usuario no es administrador, por lo que se devuelve un mensaje de error.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar reportes."}
+		```
 
 + Response 404 (application/json)
+El reporte requerido no pudo ser encontrado con el ID que se proporcionó.
+	+ Body
+		```
+		{"message": "El reporte con ID 1 no ha sido encontrado."}
+		```
 
 ### Eliminar reporte [DELETE]
+Se elimina el reporte del sistema, pues ya no es necesario porque ya fue atendido.
 
 + Request
 	+ Headers
@@ -845,16 +906,32 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El reporte fue eliminado correctamente, se informa lo sucedido.
+	+ Body
+		```
+		{"message": "Reporte con ID 1 eliminado correctamente."}
+		```
 
 + Response 401 (application/json)
+El usuario no es administrador, por lo que no puede eliminar los reportes, así que se regresa un mensaje de error.
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar reportes."}
+		```
 
 + Response 404 (application/json)
+El reporte no pudo ser localizado con el ID indicado en la petición.
+	+ Body
+		```
+		{"message": "El reporte con ID 1 no ha sido encontrado."}
+		```
 
 # Group Usuarios
 
 ## Datos del usuario [/users/:user_id]
 
 ### Obtener usuario [GET]
+Se obtienen los datos del usuario, tales como el nombre, su correo y su fotografía.
 
 + Request
 	+ Headers
@@ -863,10 +940,29 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Se devuelven los datos guardados del usuario, excepto la contraseña.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": null,
+			"is_active": true
+		}
+		```
 
 + Response 404 (application/json)
+El usuario no se pudo localizar con el ID proporcionado, por lo que se informa con un mensaje de error.
+	+ Body
+		```
+		{"message": "El usuario con ID 1 no ha sido encontrado."}
+		```
 
 ### Modificar datos [PUT]
+Actualiza los datos del usuario, tales como el nombre, el correo electrónico y el tipo de usuario.
 
 + Request (application/json)
 	+ Headers
@@ -875,12 +971,40 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Los datos han sido actualizados correctamente, se devuelve un objeto con los datos actualizados.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": null,
+			"is_active": true
+		}
+		```
 
 + Response 400 (application/json)
+Alguno de los campos por actualizar no es válido, es posible que no cumplan con el formato necesario.
+	+ Body
+		```
+		{"message": ...}
+		```
 
 + Response 401 (application/json)
+El usuario al que pertenece la JWT no es el mismo que se quiere modificar (solo se puede modificar a sí mismo).
+	+ Body
+		```
+		{"message": "No tiene permiso para modificar los datos de esta cuenta."}
+		```
 
 ### Eliminar usuario [DELETE]
+Se borra al usuario del sistema, no se pide confirmación para realizarlo.
+
+::: warning
+Al eliminar un usuario, se borran todos sus productos, pedidos, reportes y toda la actividad realizada por este.
+:::
 
 + Request
 	+ Headers
@@ -889,23 +1013,72 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El usuario ha sido borrado correctamente. Se informa lo sucedido.
+	+ Body
+		```
+		{"message": "Usuario con ID 1 borrado correctamente."}
+		```
 
 + Response 401 (application/json)
+Si el usuario no se está intentando eliminar a sí mismo o no es administrador se rechaza la petición (solo los administradores pueden eliminar cuentas ajenas).
+	+ Body
+		```
+		{"message": "No tiene permiso para eliminar esta cuenta."}
+		```
 
 + Response 404 (application/json)
+No se encontró al usuario con el ID indicado en la petición.
+	+ Body
+		```
+		{"message": "El usuario con ID 1 no existe."}
+		```
 
 ## Imagen del usuario [/users/:user_id/picture]
 
 ### Actualizar imagen [PUT]
+Permite agregar o modificar una foto de perfil al usuario.
+
+::: note
+La imagen proporcionada debe ser una cadena de texto en formato base64 o ser null, en caso de querer removerla.
+:::
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"picture": "data:image/png;base64..."
+		}
+		```
 
 + Response 200 (application/json)
+Se devuelven los datos del usuario, con la imagen ya actualizada.
+	+ Body
+		```
+		{
+			"id": 1,
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"type": "normal",
+			"picture": "data:image/png;base64...",
+			"is_active": true
+		}
+		```
 
 + Response 400 (application/json)
+Si la imagen no es null o no cumple con el formato de una imagen en base64, se devolverá un mensaje de error.
+	+ Body
+		```
+		{"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}
+		```
 
 + Response 401 (application/json)
+Si el usuario intenta modificar la imagen de otro usuario, se rechazará la petición y se enviará un mensaje de error.
+	+ Body
+		```
+		{"message": "No tiene permitido modificar la imagen de perfil de la cuenta."}
+		```
