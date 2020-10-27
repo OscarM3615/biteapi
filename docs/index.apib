@@ -717,24 +717,65 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 + Response 200 (application/json)
 
 ### Crear producto [POST]
+Se agrega un nuevo producto al sistema para la compra por parte de los demás usuarios.
 
 + Request (application/json)
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"category_id": 1,
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50,
+			"image": "data:image/png;base64..."
+		}
+		```
 
 + Response 201 (application/json)
+El producto ha sido agregado al catálogo del usuario. Se retornan los detalles del producto para verificar que sean correctos.
+	+ Body
+		```
+		{
+			"id": 1,
+			"vendor": {...},
+			"category": {...},
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50.0,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 400 (application/json)
+Si la imagen no cumple con el formato base64 se devolverá un mensaje de error indicando el problema.
+	+ Body
+		```
+		{"message": "La imagen debe ser base64 de tipo imagen."}
+		```
 
 + Response 401 (application/json)
+Si el usuario no es de tipo vendedor se le negará la petición de agregar el producto.
+	+ Body
+		```
+		{"message": "Se requiere ser vendedor para agregar productos."}
+		```
 
 + Response 404 (application/json)
+Si la categoría no puede ser encontrada con el ID indicado se le informará al usuario.
+	+ Body
+		```
+		{"message": "La categoría con ID 1 no ha sido encontrada."}
+		```
 
 ## Producto [/products/:product_id]
 
 ### Obtener producto [GET]
+Devuelve los datos de un producto en específico.
 
 + Request
 	+ Headers
@@ -743,10 +784,34 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Los detalles del producto son devueltos. Incluyendo los datos de la categoría y del vendedor.
+	+ Body
+		```
+		{
+			"id": 1,
+			"vendor": {...},
+			"category": {...},
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50.0,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 401 (application/json)
+Se rechaza la petición porque el producto no está marcado como visible y tampoco es el vendedor de este.
+	+ Body
+		```
+		{"message": "No tiene permitido visualizar este producto."}
+		```
 
 + Response 404 (application/json)
+El producto no pudo ser encontrado por el ID indicado, por lo que se informa el error.
+	+ Body
+		```
+		{"messge": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ### Modificar producto [PUT]
 
@@ -755,16 +820,57 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 		Authorization: JWT {{access_token}}
 		```
+	+ Body
+		```
+		{
+			"category_id": 1,
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 200 (application/json)
+Se regresan los detalles del producto actualizados.
+	+ Body
+		```
+		{
+			"id": 1,
+			"vendor": {...},
+			"category": {...},
+			"name": "Producto 1",
+			"description": "Descripción del producto 1",
+			"price": 50.0,
+			"image": "data:image/png;base64...",
+			"visible": true
+		}
+		```
 
 + Response 400 (application/json)
+Se rechaza la petición porque la nueva imagen no cumple con el formato de base64.
+	+ Body
+		```
+		{"message": "La imagen debe ser base64 de tipo imagen."}
+		```
 
 + Response 401 (application/json)
+Se niega el permiso de modificar el producto, pues el usuario que lo solicitó no es el vendedor de este.
+	+ Body
+		```
+		{"message": "No tiene permitido modificar este producto."}
+		```
 
 + Response 404 (application/json)
+El producto a modificar no se pudo encontrar usando el ID proporcionado.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ### Eliminar producto [DELETE]
+Eliminar un producto del inventario del usuario y del sistema.
 
 + Request
 	+ Headers
@@ -773,14 +879,30 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+El producto fue correctamente eliminado, se devuelve un mensaje de estado.
+	+ Body
+		```
+		{"message": "Producto con ID 1 eliminado correctamente."}
+		```
 
 + Response 401 (application/json)
+Se rechaza la petición para eliminar el producto porque el usuario que lo solicitó no es el vendedor de este.
+	+ Body
+		```
+		{"message": "No tiene permitido eliminar este producto."}
+		```
 
 + Response 404 (application/json)
+El producto a eliminar no pudo ser encontrado utilizando el ID que se proporcionó.
+	+ Body
+		```
+		{"message": "El producto con ID 1 no ha sido encontrado."}
+		```
 
 ## Inventario [/users/:user_id/products]
 
 ### Obtener inventario [GET]
+Regresa la lista de los productos que hay en el inventario del usuario vendedor, sean visibles o no.
 
 + Request
 	+ Headers
@@ -789,8 +911,30 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 		```
 
 + Response 200 (application/json)
+Se devuelve una lista con sus productos agregados.
+	+ Body
+		```
+		[
+			{
+				"id": 1,
+				"vendor": {...},
+				"category": {...},
+				"name": "Producto 1",
+				"description": "Descripción del producto 1",
+				"price": 50.0,
+				"image": "data:image/png;base64...",
+				"visible": true
+			},
+			...
+		]
+		```
 
 + Response 401 (application/json)
+El usuario está intentando ver el inventario de otro usuario, por lo que se rechaza la petición.
+	+ Body
+		```
+		{"message": "No tiene permitido consultar la lista de productos."}
+		```
 
 # Group Reportes
 
