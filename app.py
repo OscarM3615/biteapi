@@ -16,7 +16,7 @@ from resources.opinion import Opinion, OpinionList
 from resources.order import Order, OrderList
 from resources.product import Product, ProductList, ProductStock
 from resources.report import Report, ReportList
-from resources.user import User, UserPicture, UserRegistration
+from resources.user import User, UserPicture, UserRegistration, UserData
 from security import authenticate, identity
 from db import db
 
@@ -43,6 +43,7 @@ def create_tables():
 
 # Rutas de la API.
 api.add_resource(UserRegistration, '/register')
+api.add_resource(UserData, '/me')
 api.add_resource(User, '/users/<int:user_id>')
 api.add_resource(UserPicture, '/users/<int:user_id>/picture')
 api.add_resource(CategoryList, '/categories')

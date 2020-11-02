@@ -138,3 +138,15 @@ class UserRegistration(Resource):
 		new_user.save_to_db()
 
 		return new_user.json(), 201
+
+class UserData(Resource):
+	"""
+	Esta clase permite identificar al usuario. 
+	"""
+	@jwt_required()
+	def get(self):
+		"""
+		Devuelve los datos del usuario que realizó la petición.
+		"""
+		user = UserModel.find_by_id(current_identity.id)
+		return user.json()
