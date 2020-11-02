@@ -16,7 +16,7 @@ class ProductModel(db.Model):
 	name = db.Column(db.String(20), nullable = False)
 	description = db.Column(db.String(255), nullable = False)
 	price = db.Column(db.Float(precision = 2), nullable = False)
-	image = db.Column(db.String(16000000), nullable = False)
+	image = db.Column(db.String(10485760), nullable = False)
 	visible = db.Column(db.Boolean(), nullable = False)
 
 	favourites = db.relationship('FavouriteModel', backref = 'product', cascade = 'all, delete-orphan', lazy = 'dynamic')

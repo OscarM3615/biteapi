@@ -20,7 +20,7 @@ class UserModel(db.Model):
 	email = db.Column(db.String(50), unique = True, nullable = False)
 	password = db.Column(db.String(80), nullable = False)
 	user_type = db.Column(db.String(10), nullable = False)
-	picture = db.Column(db.String(16000000))
+	picture = db.Column(db.String(10485760))
 	active_state = db.Column(db.Boolean(), nullable = False)
 	recovery_key = db.Column(db.String(64), nullable = False)
 
