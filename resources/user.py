@@ -6,9 +6,10 @@ import bcrypt
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
+from models.product import ProductModel
 from models.user import UserModel
 from regex import identityRegex, emailRegex, passwordRegex, base64Regex
-from constants import admitted_users
+from constants import admitted_users, user_types
 
 class User(Resource):
 	"""
@@ -18,6 +19,7 @@ class User(Resource):
 	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
+	parser.add_argument('is_active', type = bool, required = True, help = 'El estado activo es requerido.')
 	parser.add_argument('user_type',
 		type = str,
 		choices = admitted_users,
@@ -54,12 +56,15 @@ class User(Resource):
 		if UserModel.find_by_email(data['email']) and user.email != data['email']:
 			return {"message": "El correo proporcionado ya pertenece a una cuenta registrada."}, 400
 
+		if user.user_type == user_types['vendor'] and data.get('user_type') == user_types['normal']:
+			ProductModel.delete_user_products(user_id)
 		if data.get('user_type'):
 			user.user_type = data['user_type']
 
 		user.first_name = data['first_name']
 		user.last_name = data['last_name']
 		user.email = data['email']
+		user.is_active = data['is_active']
 		user.save_to_db()
 
 		return user.json()
@@ -141,7 +146,7 @@ class UserRegistration(Resource):
 
 class UserData(Resource):
 	"""
-	Esta clase permite identificar al usuario. 
+	Esta clase permite identificar al usuario.
 	"""
 	@jwt_required()
 	def get(self):

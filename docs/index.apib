@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://127.0.0.1:5000
+HOST: https://biteappjrz.herokuapp.com
 
 # Bite API
 
@@ -1168,6 +1168,10 @@ El usuario no se pudo localizar con el ID proporcionado, por lo que se informa c
 ### Modificar datos [PUT]
 Actualiza los datos del usuario, tales como el nombre, el correo electrónico y el tipo de usuario.
 
+::: warning
+Al modificar `user_type` de `vendor` a `normal` se perderán todos los productos agregados anteriormente por el usuario.
+:::
+
 + Parameters
 	+ user_id: `1` (int) - Identificador del usuario al cual modificar sus datos.
 
@@ -1175,6 +1179,16 @@ Actualiza los datos del usuario, tales como el nombre, el correo electrónico y 
 	+ Headers
 		```
 		Authorization: JWT {{access_token}}
+		```
+	+ Body
+		```
+		{
+			"first_name": "Test",
+			"last_name": "Account",
+			"email": "testaccount@hotmail.com",
+			"is_active": true,
+			"user_type": "normal"
+		}
 		```
 
 + Response 200 (application/json)

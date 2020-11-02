@@ -88,3 +88,11 @@ class ProductModel(db.Model):
 		"""
 		db.session.delete(self)
 		db.session.commit()
+
+	@classmethod
+	def delete_user_products(cls, user_id: int):
+		"""
+		Elimina todos los productos de un usuario.
+		"""
+		cls.query.filter_by(user_id = user_id).delete()
+		db.session.commit()
