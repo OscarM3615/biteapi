@@ -269,7 +269,7 @@ Devuelve la lista de los productos favoritos del usuario.
 					"name": "Producto 1",
 					"description": "Descripción del producto 1",
 					"price": 50.0,
-					"image": "data:image/png;base64...",
+					"image": "https://...",
 					"visible": true
 				}
 			},
@@ -305,7 +305,7 @@ El producto ha sido marcado como favorito para el usuario.
 				"name": "Producto 1",
 				"description": "Descripción del producto 1",
 				"price": 50.0,
-				"image": "data:image/png;base64...",
+				"image": "https://...",
 				"visible": true
 			}
 		}
@@ -770,7 +770,7 @@ Se agrega un nuevo producto al sistema para la compra por parte de los demás us
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50,
-			"image": "data:image/png;base64..."
+			"image": "https://..."
 		}
 		```
 
@@ -785,16 +785,16 @@ El producto ha sido agregado al catálogo del usuario. Se retornan los detalles 
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50.0,
-			"image": "data:image/png;base64...",
+			"image": "https://...",
 			"visible": true
 		}
 		```
 
 + Response 400 (application/json)
-Si la imagen no cumple con el formato base64 se devolverá un mensaje de error indicando el problema.
+Si la imagen no cumple con el formato de enlace web se devolverá un mensaje de error indicando el problema.
 	+ Body
 		```
-		{"message": "La imagen debe ser base64 de tipo imagen."}
+		{"message": "La imagen debe ser un enlace."}
 		```
 
 + Response 401 (application/json)
@@ -836,7 +836,7 @@ Los detalles del producto son devueltos. Incluyendo los datos de la categoría y
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50.0,
-			"image": "data:image/png;base64...",
+			"image": "https://...",
 			"visible": true
 		}
 		```
@@ -872,7 +872,7 @@ El producto no pudo ser encontrado por el ID indicado, por lo que se informa el 
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50,
-			"image": "data:image/png;base64...",
+			"image": "https://...",
 			"visible": true
 		}
 		```
@@ -888,16 +888,16 @@ Se regresan los detalles del producto actualizados.
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50.0,
-			"image": "data:image/png;base64...",
+			"image": "https://...",
 			"visible": true
 		}
 		```
 
 + Response 400 (application/json)
-Se rechaza la petición porque la nueva imagen no cumple con el formato de base64.
+Se rechaza la petición porque la nueva imagen no cumple con el formato de enlace web.
 	+ Body
 		```
-		{"message": "La imagen debe ser base64 de tipo imagen."}
+		{"message": "La imagen debe ser un enlace."}
 		```
 
 + Response 401 (application/json)
@@ -973,7 +973,7 @@ Se devuelve una lista con sus productos agregados.
 				"name": "Producto 1",
 				"description": "Descripción del producto 1",
 				"price": 50.0,
-				"image": "data:image/png;base64...",
+				"image": "https://..",
 				"visible": true
 			},
 			...
@@ -1263,7 +1263,7 @@ No se encontró al usuario con el ID indicado en la petición.
 Permite agregar o modificar una foto de perfil al usuario.
 
 ::: note
-La imagen proporcionada debe ser una cadena de texto en formato base64 o ser `null`, en caso de querer removerla.
+La imagen proporcionada debe ser una cadena de texto en formato  o ser `null`, en caso de querer removerla.
 :::
 
 + Parameters
@@ -1277,7 +1277,7 @@ La imagen proporcionada debe ser una cadena de texto en formato base64 o ser `nu
 	+ Body
 		```
 		{
-			"picture": "data:image/png;base64..."
+			"picture": "https://..."
 		}
 		```
 
@@ -1291,16 +1291,16 @@ Se devuelven los datos del usuario, con la imagen ya actualizada.
 			"last_name": "Account",
 			"email": "testaccount@hotmail.com",
 			"type": "normal",
-			"picture": "data:image/png;base64...",
+			"picture": "https://...",
 			"is_active": true
 		}
 		```
 
 + Response 400 (application/json)
-Si la imagen no es null o no cumple con el formato de una imagen en base64, se devolverá un mensaje de error.
+Si la imagen no es null o no cumple con el formato de un enlace, se devolverá un mensaje de error.
 	+ Body
 		```
-		{"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}
+		{"message": "Se debe proporcionar un enlace de una imagen o null."}
 		```
 
 + Response 401 (application/json)
