@@ -2,9 +2,6 @@
 Este módulo contiene la clase para hacer cambios sobre los usuarios en la base de datos.
 """
 
-from hashlib import sha256
-from random import randint
-
 from db import db
 from constants import user_types
 
@@ -22,7 +19,6 @@ class UserModel(db.Model):
 	user_type = db.Column(db.String(10), nullable = False)
 	picture = db.Column(db.String(10485760))
 	active_state = db.Column(db.Boolean(), nullable = False)
-	recovery_key = db.Column(db.String(64), nullable = False)
 
 	customers = db.relationship('OrderModel', backref = 'customer', cascade = 'all, delete-orphan', lazy = 'dynamic', foreign_keys = 'OrderModel.customer_id')
 	favourites = db.relationship('FavouriteModel', backref = 'user', cascade = 'all, delete-orphan', lazy = 'dynamic')
@@ -38,7 +34,6 @@ class UserModel(db.Model):
 		self.user_type = user_types['normal']
 		self.picture = None
 		self.active_state = True
-		self.recovery_key = sha256(str(randint(1, 9999)).encode('utf-8')).hexdigest()
 
 	def json(self):
 		"""
