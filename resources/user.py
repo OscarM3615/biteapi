@@ -8,7 +8,7 @@ from flask_jwt import jwt_required, current_identity
 
 from models.product import ProductModel
 from models.user import UserModel
-from regex import identityRegex, emailRegex, passwordRegex, base64Regex
+from regex import identityRegex, emailRegex, passwordRegex, imgurlRegex
 from constants import admitted_users, user_types
 
 class User(Resource):
@@ -102,8 +102,8 @@ class UserPicture(Resource):
 		data = UserPicture.parser.parse_args()
 		user = UserModel.find_by_id(user_id)
 
-		if data['picture'] is not None and base64Regex.match(data['picture']) is None:
-			return {"message": "Se debe proporcionar un base64 de tipo imagen (png, jpg, gif) o null."}, 400
+		if data['picture'] is not None and imgurlRegex.match(data['picture']) is None:
+			return {"message": "Se debe proporcionar un enlace de una imagen o null."}, 400
 
 		user.picture = data['picture']
 		user.save_to_db()

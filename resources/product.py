@@ -8,7 +8,7 @@ from flask_jwt import jwt_required, current_identity
 from models.product import ProductModel
 from models.category import CategoryModel
 from constants import user_types
-from regex import base64Regex
+from regex import imgurlRegex
 
 class Product(Resource):
 	"""
@@ -49,7 +49,7 @@ class Product(Resource):
 
 		data = Product.parser.parse_args()
 
-		if base64Regex.match(data['image']) is None:
+		if imgurlRegex.match(data['image']) is None:
 			return {"message": "La imagen debe ser base64 de tipo imagen."}, 400
 
 		product.category_id = data['category_id']
@@ -115,8 +115,8 @@ class ProductList(Resource):
 		if not CategoryModel.find_by_id(data['category_id']):
 			return {"message": f"La categoría con ID {data['category_id']!r} no ha sido encontrada."}, 404
 
-		if base64Regex.match(data['image']) is None:
-			return {"message": "La imagen debe ser base64 de tipo imagen."}, 400
+		if imgurlRegex.match(data['image']) is None:
+			return {"message": "La imagen debe ser un enlace de una imagen."}, 400
 
 		new_product = ProductModel(current_identity.id, **data)
 		new_product.save_to_db()
