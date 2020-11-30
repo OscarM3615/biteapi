@@ -6,7 +6,7 @@ En este archivo se establece la configuración sobre las diferentes librerías y
 import os
 from datetime import timedelta
 
-from flask import Flask
+from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api
 from flask_jwt import JWT
@@ -44,6 +44,15 @@ def create_tables():
 	Crear las tablas de la base de datos para que puedan ser utilizadas.
 	"""
 	db.create_all()
+
+# Mostrar la documentación al ingresar a la raíz del sitio.
+@app.route('/')
+def documentation():
+	return render_template('index.html')
+
+@app.route('/favicon.ico')
+def favicon():
+	return send_from_directory('static', filename = 'favicon.ico')
 
 # Rutas de la API.
 api.add_resource(UserRegistration, '/register')
