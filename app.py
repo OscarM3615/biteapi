@@ -48,10 +48,16 @@ def create_tables():
 # Mostrar la documentación al ingresar a la raíz del sitio.
 @app.route('/')
 def documentation():
+	"""
+	Devuelve la documentación de la API en formato HTML.
+	"""
 	return render_template('index.html')
 
 @app.route('/favicon.ico')
 def favicon():
+	"""
+	Devuelve el favicon.ico utilizado para la documentación.
+	"""
 	return send_from_directory('static', filename = 'favicon.ico')
 
 # Rutas de la API.
