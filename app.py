@@ -22,7 +22,6 @@ from security import authenticate, identity
 from db import db
 
 app = Flask(__name__)
-CORS(app)
 
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
@@ -33,8 +32,11 @@ app.config['JWT_AUTH_URL_RULE'] = '/login' # Establecer la ruta de identificaci√
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(days = 30) # El JWT expira en 1 mes.
 app.config['JWT_AUTH_USERNAME_KEY'] = 'email' # Pedir correo en lugar del nombre de usuario.
 
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 app.secret_key = os.environ.get('SECRET_KEY', '05d08a3aa04b7283bba6ebf3')
 
+CORS(app, resources = {r"/*": {"origins": "*"}})
 api = Api(app)
 jwt = JWT(app, authenticate, identity)
 
