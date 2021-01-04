@@ -19,8 +19,8 @@ Crear un nuevo usuario para interactuar con la API.
 	+ Body
 		```
 		{
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
 			"password": "1234"
 		}
@@ -32,12 +32,12 @@ Devuelve al mismo usuario para verificar que se guardó correctamente.
 		```
 		{
 			"id": 1,
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
 			"type": "normal",
 			"picture": null,
-			"is_active": true
+			"isActive": true
 		}
 		```
 
@@ -94,7 +94,7 @@ En caso de que no se proporcione una JWT o que esta haya expirado, se devolverá
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -102,12 +102,12 @@ En caso de que no se proporcione una JWT o que esta haya expirado, se devolverá
 		```
 		{
 			"id": 1,
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
 			"type": "normal",
 			"picture": null,
-			"is_active": true
+			"isActive": true
 		}
 		```
 
@@ -121,7 +121,7 @@ Devuelve una lista de las categorías existentes.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -142,7 +142,7 @@ Ingresa una nueva categoría a la base de datos.
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
@@ -175,18 +175,18 @@ El usuario no tiene permitido crear categorías (Solo pueden ser creadas por usu
 		{"message": "No tiene permitido crear nuevas categorías."}
 		```
 
-## Categoría [/categories/{category_id}]
+## Categoría [/categories/{categoryId}]
 
 ### Obtener categoría [GET]
 Devuelve una única categoría.
 
 + Parameters
-	+ category_id: `1` (int) - Identificador de la categoría que se quiere obtener.
+	+ categoryId: `1` (int) - Identificador de la categoría que se quiere obtener.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -214,12 +214,12 @@ Al eliminar una categoría se eliminarán todos los productos ligados a ella.
 :::
 
 + Parameters
-	+ category_id: `1` (int) - Identificador de la categoría que se quiere eliminar.
+	+ categoryId: `1` (int) - Identificador de la categoría que se quiere eliminar.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -253,7 +253,7 @@ Devuelve la lista de los productos favoritos del usuario.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -283,12 +283,12 @@ Agrega a la lista de favoritos del usuario un producto si no ha sido agregado a�
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
-			"product_id": 1
+			"productId": 1
 		}
 		```
 
@@ -332,18 +332,18 @@ El producto no pudo ser encontrado con el ID que se proporcionó en la petición
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Favorito [/favourites/{favourite_id}]
+## Favorito [/favourites/{favouriteId}]
 
 ### Eliminar favorito [DELETE]
 Permite quitar un producto de los favoritos del usuario. No elimina el producto del vendedor.
 
 + Parameters
-	+ favourite_id: `1` (int) - Identificador del favorito a eliminar.
+	+ favouriteId: `1` (int) - Identificador del favorito a eliminar.
 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -369,18 +369,18 @@ El registro del favorito no pudo ser encontrado con el ID indicado en la petici�
 
 # Group Opiniones
 
-## Colección de Opiniones [/products/{product_id}/opinions]
+## Colección de Opiniones [/products/{productId}/opinions]
 
 ### Obtener opiniones [GET]
 Devuelve la lista de opiniones realizadas sobre un producto en particular.
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto al que pertenecen las opiniones.
+	+ productId: `1` (int) - Identificador del producto al que pertenecen las opiniones.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -390,7 +390,7 @@ El producto existe, por lo que se devuelve una lista con las opiniones.
 		[
 			{
 				"id": 1,
-				"product_id": 1,
+				"productId": 1,
 				"rating": 4,
 				"comment": "Comentarios sobre el producto."
 			},
@@ -409,18 +409,18 @@ El producto no se pudo encontrar con el ID proporcionado, por lo que devuelve un
 Crea una opinión sobre un producto existente.
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto sobre el que se va a opinar.
+	+ productId: `1` (int) - Identificador del producto sobre el que se va a opinar.
 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
 			"id": 1,
-			"product_id": 1,
+			"productId": 1,
 			"rating": 4,
 			"comment": "Comentarios sobre el producto."
 		}
@@ -432,7 +432,7 @@ La opinión sobre el producto ha sido publicada.
 		```
 		{
 			"id": 1,
-			"product_id": 1,
+			"productId": 1,
 			"rating": 4,
 			"comment": "Comentarios sobre el producto."
 		}
@@ -452,19 +452,19 @@ El producto sobre el que se quiere opinar no se ha podido encontrar según el ID
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Opinión [/products/{product_id}/opinions/{opinion_id}]
+## Opinión [/products/{productId}/opinions/{opinionId}]
 
 ### Obtener opinión [GET]
 Devuelve los datos de una opinión en concreto.
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto al que pertenece la opinión.
-	+ opinion_id: `1` (int) - Identificador de la opinión a obtener.
+	+ productId: `1` (int) - Identificador del producto al que pertenece la opinión.
+	+ opinionId: `1` (int) - Identificador de la opinión a obtener.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -473,7 +473,7 @@ La opinión existe, así que se devuelven sus datos.
 		```
 		{
 			"id": 1,
-			"product_id": 1,
+			"productId": 1,
 			"rating": 4,
 			"comment": "Comentarios sobre el producto."
 		}
@@ -490,13 +490,13 @@ La opinión no ha sido encontrada, por lo que se devuelve un mensaje de error.
 Elimina una opinión si resulta ofensiva o no es adecuada. Solo los administradores pueden realizarlo.
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto al que pertenece la opinión.
-	+ opinion_id: `1` (int) - Identificador de la opinión a eliminar.
+	+ productId: `1` (int) - Identificador del producto al que pertenece la opinión.
+	+ opinionId: `1` (int) - Identificador de la opinión a eliminar.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -534,7 +534,7 @@ El formato del tiempo del pedido es UTC.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -549,7 +549,7 @@ El formato del tiempo del pedido es UTC.
 				"amount": 1,
 				"comment": "Comentarios a realizar (pueden ser indicaciones)",
 				"status": "pending",
-				"order_time": "2020-10-25 00:43:34.991331"
+				"orderTime": "2020-10-25 00:43:34.991331"
 			},
 			...
 		]
@@ -561,12 +561,12 @@ Se realiza un nuevo pedido sobre un producto. Envía un mensaje de error si el u
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
-			"product_id": 1,
+			"productId": 1,
 			"location": "Destino de entrega",
 			"amount": 1
 		}
@@ -584,7 +584,7 @@ El pedido ha sido creado, se devuelven los detalles del producto, incluyendo la 
 			"amount": 1,
 			"comment": "Comentarios a realizar (pueden ser indicaciones)",
 			"status": "pending",
-			"order_time": "2020-10-25 00:43:34.991331"
+			"orderTime": "2020-10-25 00:43:34.991331"
 		}
 		```
 
@@ -609,18 +609,18 @@ El producto no pudo ser encontrado con el ID que se proporcionó en la petición
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Pedido [/orders/{order_id}]
+## Pedido [/orders/{orderId}]
 
 ### Obtener pedido [GET]
 Se devuelven los detalles de un pedido en particular, solo en caso de que el usuario esté involucrado en él, ya sea como vendedor o como cliente.
 
 + Parameters
-	+ order_id: `1` (int) - Identificador del pedido a obtener.
+	+ orderId: `1` (int) - Identificador del pedido a obtener.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -635,7 +635,7 @@ El usuario está involucrado en el pedido, por lo que puede acceder a los detall
 			"amount": 1,
 			"comment": "Comentarios a realizar (pueden ser indicaciones)",
 			"status": "pending",
-			"order_time": "2020-10-25 00:43:34.991331"
+			"orderTime": "2020-10-25 00:43:34.991331"
 		}
 		```
 
@@ -657,12 +657,12 @@ El pedido no pudo ser encontrado con el ID que se proporcionó en la petición.
 Marca el pedido como finalizado, solo lo puede realizar el vendedor involucrado en el pedido.
 
 + Parameters
-	+ order_id: `1` (int) - Identificador del pedido a modificar.
+	+ orderId: `1` (int) - Identificador del pedido a modificar.
 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
@@ -683,7 +683,7 @@ Se devuelven los detalles del pedido, con el campo de estado como finalizado.
 			"amount": 1,
 			"comment": "Comentarios a realizar (pueden ser indicaciones)",
 			"status": "done",
-			"order_time": "2020-10-25 00:43:34.991331"
+			"orderTime": "2020-10-25 00:43:34.991331"
 		}
 		```
 
@@ -705,12 +705,12 @@ El pedido no pudo ser encontrado con el ID que se indicó.
 El cliente puede cancelar el pedido si hay un error en este. Se elimina el pedido del sistema para no dejar rastro de él.
 
 + Parameters
-	+ order_id: `1` (int) - Identificador del pedido a eliminar.
+	+ orderId: `1` (int) - Identificador del pedido a eliminar.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -736,21 +736,21 @@ El pedido no se pudo encontrar con el ID que se proporcionó.
 
 # Group Productos
 
-## Colección de productos [/products{?page,vendor_id,category_id,search}]
+## Colección de productos [/products{?page,vendorId,categoryId,search}]
 
 ### Buscar productos [GET]
 Devuelve una lista de 10 productos, para conseguir los siguientes 10 se debe modificar el argumento `page`.
 
 + Parameters
 	+ page: `1` (optional, int) - Página de productos: 1 devolverá los últimos 10 productos, 2 devolverá los 10 anteriores y así sucesivamente.
-	+ vendor_id: `1` (optional, int) - Filtrar los productos por un único vendedor.
-	+ category_id: `1` (optional, int) - Filtrar los productos por una categoría en específico.
+	+ vendorId: `1` (optional, int) - Filtrar los productos por un único vendedor.
+	+ categoryId: `1` (optional, int) - Filtrar los productos por una categoría en específico.
 	+ search: `"Producto"` (optional, string) - Agregar un término de búsqueda para filtrar los resultados por lo que desea el usuario.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -761,12 +761,12 @@ Se agrega un nuevo producto al sistema para la compra por parte de los demás us
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
-			"category_id": 1,
+			"categoryId": 1,
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50,
@@ -811,18 +811,18 @@ Si la categoría no puede ser encontrada con el ID indicado se le informará al 
 		{"message": "La categoría con ID 1 no ha sido encontrada."}
 		```
 
-## Producto [/products/{product_id}]
+## Producto [/products/{productId}]
 
 ### Obtener producto [GET]
 Devuelve los datos de un producto en específico.
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto a obtener.
+	+ productId: `1` (int) - Identificador del producto a obtener.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -858,17 +858,17 @@ El producto no pudo ser encontrado por el ID indicado, por lo que se informa el 
 ### Modificar producto [PUT]
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto a modificar.
+	+ productId: `1` (int) - Identificador del producto a modificar.
 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
-			"category_id": 1,
+			"categoryId": 1,
 			"name": "Producto 1",
 			"description": "Descripción del producto 1",
 			"price": 50,
@@ -918,12 +918,12 @@ El producto a modificar no se pudo encontrar usando el ID proporcionado.
 Eliminar un producto del inventario del usuario y del sistema.
 
 + Parameters
-	+ product_id: `1` (int) - Identificador del producto a eliminar.
+	+ productId: `1` (int) - Identificador del producto a eliminar.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -947,18 +947,18 @@ El producto a eliminar no pudo ser encontrado utilizando el ID que se proporcion
 		{"message": "El producto con ID 1 no ha sido encontrado."}
 		```
 
-## Inventario [/users/{user_id}/products]
+## Inventario [/users/{userId}/products]
 
 ### Obtener inventario [GET]
 Regresa la lista de los productos que hay en el inventario del usuario vendedor, sean visibles o no.
 
 + Parameters
-	+ user_id: `1` (int) - Identificador del usuario del cual obtener el inventario.
+	+ userId: `1` (int) - Identificador del usuario del cual obtener el inventario.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -997,7 +997,7 @@ Devuelve la lista de reportes de usuarios existentes en el sistema. Solo la pued
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -1027,12 +1027,12 @@ Se realiza un reporte sobre un usuario, en caso de que haya un comportamineto in
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
-			"user_id": 1,
+			"userId": 1,
 			"comment": "Comentarios sobre el usuario reportado."
 		}
 		```
@@ -1055,18 +1055,18 @@ El usuario no pudo ser encontrado con el ID que se proporcionó. Se devuelve un 
 		{"message": "El usuario con ID 1 no existe."}
 		```
 
-## Reporte [/reports/{report_id}]
+## Reporte [/reports/{reportId}]
 
 ### Obtener reporte [GET]
 Se devuelven los detalles de un reporte en específico. Solo lo pueden pedir los administradores.
 
 + Parameters
-	+ report_id: `1` (int) - Identificador del reporte a obtener.
+	+ reportId: `1` (int) - Identificador del reporte a obtener.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -1098,12 +1098,12 @@ El reporte requerido no pudo ser encontrado con el ID que se proporcionó.
 Se elimina el reporte del sistema, pues ya no es necesario porque ya fue atendido.
 
 + Parameters
-	+ report_id: `1` (int) - Identificador del reporte a eliminar.
+	+ reportId: `1` (int) - Identificador del reporte a eliminar.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -1129,18 +1129,18 @@ El reporte no pudo ser localizado con el ID indicado en la petición.
 
 # Group Usuarios
 
-## Datos del usuario [/users/{user_id}]
+## Datos del usuario [/users/{userId}]
 
 ### Obtener usuario [GET]
 Se obtienen los datos del usuario, tales como el nombre, su correo y su fotografía.
 
 + Parameters
-	+ user_id: `1` (int) - Identificador del usuario a obtener.
+	+ userId: `1` (int) - Identificador del usuario a obtener.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -1149,12 +1149,12 @@ Se devuelven los datos guardados del usuario, excepto la contraseña.
 		```
 		{
 			"id": 1,
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
 			"type": "normal",
 			"picture": null,
-			"is_active": true
+			"isActive": true
 		}
 		```
 
@@ -1169,25 +1169,25 @@ El usuario no se pudo localizar con el ID proporcionado, por lo que se informa c
 Actualiza los datos del usuario, tales como el nombre, el correo electrónico y el tipo de usuario.
 
 ::: warning
-Al modificar `user_type` de `vendor` a `normal` se perderán todos los productos agregados anteriormente por el usuario.
+Al modificar `userType` de `vendor` a `normal` se perderán todos los productos agregados anteriormente por el usuario.
 :::
 
 + Parameters
-	+ user_id: `1` (int) - Identificador del usuario al cual modificar sus datos.
+	+ userId: `1` (int) - Identificador del usuario al cual modificar sus datos.
 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
 		{
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
-			"is_active": true,
-			"user_type": "normal"
+			"isActive": true,
+			"userType": "normal"
 		}
 		```
 
@@ -1197,12 +1197,12 @@ Los datos han sido actualizados correctamente, se devuelve un objeto con los dat
 		```
 		{
 			"id": 1,
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
 			"type": "normal",
 			"picture": null,
-			"is_active": true
+			"isActive": true
 		}
 		```
 
@@ -1228,12 +1228,12 @@ Al eliminar un usuario, se borran todos sus productos, pedidos, reportes y toda 
 :::
 
 + Parameters
-	+ user_id: `1` (int) - Identificador del usuario a eliminar.
+	+ userId: `1` (int) - Identificador del usuario a eliminar.
 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 
 + Response 200 (application/json)
@@ -1257,22 +1257,22 @@ No se encontró al usuario con el ID indicado en la petición.
 		{"message": "El usuario con ID 1 no existe."}
 		```
 
-## Imagen del usuario [/users/{user_id}/picture]
+## Imagen del usuario [/users/{userId}/picture]
 
 ### Actualizar imagen [PUT]
 Permite agregar o modificar una foto de perfil al usuario.
 
 ::: note
-La imagen proporcionada debe ser una cadena de texto en formato  o ser `null`, en caso de querer removerla.
+La imagen proporcionada debe ser una URL o ser `null`, en caso de querer removerla.
 :::
 
 + Parameters
-	+ user_id: `1` (int) - Identificador del usuario al cual actualizar su imagen.
+	+ userId: `1` (int) - Identificador del usuario al cual actualizar su imagen.
 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{access_token}}
+		Authorization: JWT {{accessToken}}
 		```
 	+ Body
 		```
@@ -1287,12 +1287,12 @@ Se devuelven los datos del usuario, con la imagen ya actualizada.
 		```
 		{
 			"id": 1,
-			"first_name": "Test",
-			"last_name": "Account",
+			"firstName": "Test",
+			"lastName": "Account",
 			"email": "testaccount@hotmail.com",
 			"type": "normal",
 			"picture": "https://...",
-			"is_active": true
+			"isActive": true
 		}
 		```
 
