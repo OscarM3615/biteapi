@@ -16,11 +16,17 @@ class User(Resource):
 	Esta clase maneja los métodos HTTP para modificar usuarios.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
-	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
+	parser.add_argument('firstName', dest = 'first_name', type = str, required = True, help = 'El nombre es requerido.')
+	parser.add_argument('lastName', dest = 'last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
-	parser.add_argument('is_active', type = bool, required = True, help = 'El estado activo es requerido.')
-	parser.add_argument('user_type',
+	parser.add_argument('isActive',
+		dest = 'is_active',
+		type = bool,
+		required = True,
+		help = 'El estado activo es requerido.'
+	)
+	parser.add_argument('userType',
+		dest = 'user_type',
 		type = str,
 		choices = admitted_users,
 		help = f'El tipo de usuario puede ser: {admitted_users!r}.'
@@ -89,12 +95,12 @@ class UserPicture(Resource):
 	Esta clase permite modificar la imagen de perfil del usuario.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('picture', type = str, required = True, help = 'La imagen es requerida (base64 o null).')
+	parser.add_argument('picture', type = str, required = True, help = 'La imagen es requerida (URL o null).')
 
 	@jwt_required()
 	def put(self, user_id: int):
 		"""
-		Actualiza la imagen del perfil (debe estar en base64).
+		Actualiza la imagen del perfil (debe ser una URL).
 		"""
 		if current_identity.id != user_id:
 			return {"message": "No tiene permitido modificar la imagen de perfil de la cuenta."}, 401
@@ -115,8 +121,8 @@ class UserRegistration(Resource):
 	Esta clase permite el registro de nuevos usuarios.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('first_name', type = str, required = True, help = 'El nombre es requerido.')
-	parser.add_argument('last_name', type = str, required = True, help = 'El apellido es requerido.')
+	parser.add_argument('firstName', dest = 'first_name', type = str, required = True, help = 'El nombre es requerido.')
+	parser.add_argument('lastName', dest = 'last_name', type = str, required = True, help = 'El apellido es requerido.')
 	parser.add_argument('email', type = str, required = True, help = 'El correo es requerido.')
 	parser.add_argument('password', type = str, required = True, help = 'La contraseña es requerida.')
 

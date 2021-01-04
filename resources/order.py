@@ -74,7 +74,12 @@ class OrderList(Resource):
 	Esta clase maneja los métodos HTTP para trabajar sobre la lista de pedidos.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('product_id', type = int, required = True, help = 'El ID del producto es requerido.')
+	parser.add_argument('productId',
+		dest = 'product_id',
+		type = int,
+		required = True,
+		help = 'El ID del producto es requerido.'
+	)
 	parser.add_argument('location', type = str, required = True, help = 'El ubicación para entregar es requerida.')
 	parser.add_argument('amount', type = int, required = True, help = 'La cantidad es requerida.')
 	parser.add_argument('comment', type = str, default = '', help = 'Comentario para el vendedor (opcional).')

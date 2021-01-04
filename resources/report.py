@@ -46,7 +46,12 @@ class ReportList(Resource):
 	Esta clase manejar los métodos HTTP para trabajar sobre la lista de reportes.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('user_id', type = int, required = True, help = 'El ID del usuario a reportar es requerido.')
+	parser.add_argument('userId',
+		dest = 'user_id',
+		type = int,
+		required = True,
+		help = 'El ID del usuario a reportar es requerido.'
+	)
 	parser.add_argument('comment', type = str, required = True, help = 'Es necesario justificar el reporte.')
 
 	@jwt_required()

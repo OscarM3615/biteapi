@@ -15,7 +15,12 @@ class Product(Resource):
 	Esta clase maneja los métodos HTTP para modificar productos.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('category_id', type = int, required = True, help = 'El ID de la categoría es requerido.')
+	parser.add_argument('categoryId',
+		dest = 'category_id',
+		type = int,
+		required = True,
+		help = 'El ID de la categoría es requerido.'
+	)
 	parser.add_argument('name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('description', type = str, required = True, help = 'La descripción es requerida.')
 	parser.add_argument('price', type = float, required = True, help = 'El precio es requerido.')
@@ -50,7 +55,7 @@ class Product(Resource):
 		data = Product.parser.parse_args()
 
 		if imgurlRegex.match(data['image']) is None:
-			return {"message": "La imagen debe ser base64 de tipo imagen."}, 400
+			return {"message": "La imagen debe ser una URL."}, 400
 
 		product.category_id = data['category_id']
 		product.name = data['name']
@@ -82,7 +87,12 @@ class ProductList(Resource):
 	Esta clase maneja los métodos HTTP para trabajar sobre la lista de productos.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('category_id', type = int, required = True, help = 'El ID de la categoría es requerido.')
+	parser.add_argument('categoryId',
+		dest = 'category_id',
+		type = int,
+		required = True,
+		help = 'El ID de la categoría es requerido.'
+	)
 	parser.add_argument('name', type = str, required = True, help = 'El nombre es requerido.')
 	parser.add_argument('description', type = str, required = True, help = 'La descripción es requerida.')
 	parser.add_argument('price', type = float, required = True, help = 'El precio es requerido.')
@@ -90,8 +100,8 @@ class ProductList(Resource):
 
 	args = reqparse.RequestParser()
 	args.add_argument('page', type = int, default = 1, location = 'args')
-	args.add_argument('vendor_id', type = int, location = 'args')
-	args.add_argument('category_id', type = int, location = 'args')
+	args.add_argument('vendorId', dest = 'vendor_id', type = int, location = 'args')
+	args.add_argument('categoryId', dest = 'category_id', type = int, location = 'args')
 	args.add_argument('search', type = str, location = 'args')
 
 	@jwt_required()

@@ -44,7 +44,12 @@ class OpinionList(Resource):
 	Esta clase maneja los métodos HTTP para trabajar sobre la lista de opiniones.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('product_id', type = int, required = True, help = 'El ID del producto es requerido.')
+	parser.add_argument('productId',
+		dest = 'product_id',
+		type = int,
+		required = True,
+		help = 'El ID del producto es requerido.'
+	)
 	parser.add_argument('rating',
 		type = int,
 		required = True,

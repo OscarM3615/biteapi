@@ -33,7 +33,7 @@ class FavouriteList(Resource):
 	Esta clase maneja los métodos HTTP para trabajar sobre la lista de favoritos.
 	"""
 	parser = reqparse.RequestParser()
-	parser.add_argument('product_id', type = int, required = True, help = 'El ID del producto es requerido.')
+	parser.add_argument('productId', dest = 'product_id', type = int, required = True, help = 'El ID del producto es requerido.')
 
 	@jwt_required()
 	def get(self):
@@ -47,7 +47,7 @@ class FavouriteList(Resource):
 		"""
 		Agrega un nuevo producto a los favoritos del usuario.
 		"""
-		if current_identity.user_type == user_types['admin']:
+		if current_identity.user_type == user_types['vendor']:
 			return {"message": "No puede marcar un producto como favorito."}, 401
 
 		data = FavouriteList.parser.parse_args()
