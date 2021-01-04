@@ -44,7 +44,7 @@ class OrderModel(db.Model):
 			"amount": self.amount,
 			"comment": self.comment,
 			"status": self.status,
-			"order_time": str(self.order_time)
+			"orderTime": str(self.order_time)
 		}
 
 	@classmethod
