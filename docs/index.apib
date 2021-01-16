@@ -94,7 +94,7 @@ En caso de que no se proporcione una JWT o que esta haya expirado, se devolverá
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -121,7 +121,7 @@ Devuelve una lista de las categorías existentes.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -142,7 +142,7 @@ Ingresa una nueva categoría a la base de datos.
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -186,7 +186,7 @@ Devuelve una única categoría.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -219,7 +219,7 @@ Al eliminar una categoría se eliminarán todos los productos ligados a ella.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -253,7 +253,7 @@ Devuelve la lista de los productos favoritos del usuario.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -283,7 +283,7 @@ Agrega a la lista de favoritos del usuario un producto si no ha sido agregado a�
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -343,7 +343,7 @@ Permite quitar un producto de los favoritos del usuario. No elimina el producto 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -380,7 +380,7 @@ Devuelve la lista de opiniones realizadas sobre un producto en particular.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -414,7 +414,7 @@ Crea una opinión sobre un producto existente.
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -464,7 +464,7 @@ Devuelve los datos de una opinión en concreto.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -496,7 +496,7 @@ Elimina una opinión si resulta ofensiva o no es adecuada. Solo los administrado
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -534,7 +534,7 @@ El formato del tiempo del pedido es UTC.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -561,14 +561,15 @@ Se realiza un nuevo pedido sobre un producto. Envía un mensaje de error si el u
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
 		{
 			"productId": 1,
 			"location": "Destino de entrega",
-			"amount": 1
+			"amount": 1,
+			"comment": "Indicaciones o comentarios para el vendedor (opcional)."
 		}
 		```
 
@@ -620,7 +621,7 @@ Se devuelven los detalles de un pedido en particular, solo en caso de que el usu
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -662,7 +663,7 @@ Marca el pedido como finalizado, solo lo puede realizar el vendedor involucrado 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -710,7 +711,7 @@ El cliente puede cancelar el pedido si hay un error en este. Se elimina el pedid
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -750,10 +751,23 @@ Devuelve una lista de 10 productos, para conseguir los siguientes 10 se debe mod
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
+	+ Body
+	```
+		[
+			{
+				"categoryId": 1,
+				"name": "Producto 1",
+				"description": "Descripción del producto 1",
+				"price": 50,
+				"image": "https://..."
+			},
+			...
+		]
+		```
 
 ### Crear producto [POST]
 Se agrega un nuevo producto al sistema para la compra por parte de los demás usuarios.
@@ -761,7 +775,7 @@ Se agrega un nuevo producto al sistema para la compra por parte de los demás us
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -822,7 +836,7 @@ Devuelve los datos de un producto en específico.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -863,7 +877,7 @@ El producto no pudo ser encontrado por el ID indicado, por lo que se informa el 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -923,7 +937,7 @@ Eliminar un producto del inventario del usuario y del sistema.
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -958,7 +972,7 @@ Regresa la lista de los productos que hay en el inventario del usuario vendedor,
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -997,7 +1011,7 @@ Devuelve la lista de reportes de usuarios existentes en el sistema. Solo la pued
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -1027,7 +1041,7 @@ Se realiza un reporte sobre un usuario, en caso de que haya un comportamineto in
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -1066,7 +1080,7 @@ Se devuelven los detalles de un reporte en específico. Solo lo pueden pedir los
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -1103,7 +1117,7 @@ Se elimina el reporte del sistema, pues ya no es necesario porque ya fue atendid
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -1140,7 +1154,7 @@ Se obtienen los datos del usuario, tales como el nombre, su correo y su fotograf
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -1178,7 +1192,7 @@ Al modificar `userType` de `vendor` a `normal` se perderán todos los productos 
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
@@ -1233,7 +1247,7 @@ Al eliminar un usuario, se borran todos sus productos, pedidos, reportes y toda 
 + Request
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 
 + Response 200 (application/json)
@@ -1272,7 +1286,7 @@ La imagen proporcionada debe ser una URL o ser `null`, en caso de querer remover
 + Request (application/json)
 	+ Headers
 		```
-		Authorization: JWT {{accessToken}}
+		Authorization: JWT accessToken
 		```
 	+ Body
 		```
