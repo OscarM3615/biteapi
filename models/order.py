@@ -59,14 +59,14 @@ class OrderModel(db.Model):
 		"""
 		Devuelve la lista de pedidos que ha realizado un usuario normal.
 		"""
-		return cls.query.filter_by(customer_id = customer_id).all()
+		return cls.query.filter_by(customer_id = customer_id).order_by(cls.order_time.desc()).all()
 
 	@classmethod
 	def get_by_vendor(cls, vendor_id: int):
 		"""
 		Devuelve la lista de pedidos que tiene por hacer un vendedor.
 		"""
-		return cls.query.filter_by(vendor_id = vendor_id).all()
+		return cls.query.filter_by(vendor_id = vendor_id).order_by(cls.order_time.desc()).all()
 
 	def save_to_db(self):
 		"""
