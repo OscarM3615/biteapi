@@ -5,7 +5,6 @@ Este módulo contiene la clase para hacer cambios sobre los pedidos en la base d
 from datetime import datetime
 
 from db import db
-from constants import order_states
 
 class OrderModel(db.Model):
 	"""
@@ -20,7 +19,6 @@ class OrderModel(db.Model):
 	location = db.Column(db.String(50), nullable = False)
 	amount = db.Column(db.Integer(), nullable = False)
 	comment = db.Column(db.String(100))
-	status = db.Column(db.String(15), nullable = False)
 	order_time = db.Column(db.DateTime(), default = datetime.utcnow)
 
 	def __init__(self, customer_id: int, vendor_id: int, product_id: int, location: str, amount: float, comment: str):
@@ -30,7 +28,6 @@ class OrderModel(db.Model):
 		self.location = location
 		self.amount = amount
 		self.comment = comment
-		self.status = order_states['pending']
 
 	def json(self):
 		"""
@@ -43,7 +40,6 @@ class OrderModel(db.Model):
 			"location": self.location,
 			"amount": self.amount,
 			"comment": self.comment,
-			"status": self.status,
 			"orderTime": str(self.order_time)
 		}
 

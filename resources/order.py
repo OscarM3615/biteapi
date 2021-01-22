@@ -7,19 +7,12 @@ from flask_jwt import jwt_required, current_identity
 
 from models.order import OrderModel
 from models.product import ProductModel
-from constants import user_types, admitted_order_states
+from constants import user_types
 
 class Order(Resource):
 	"""
 	Esta clase maneja los métodos HTTP para modificar pedidos.
 	"""
-	parser = reqparse.RequestParser()
-	parser.add_argument('status',
-		type = str,
-		required = True,
-		choices = admitted_order_states,
-		help = f'Solo se puede marcar el pedido como: {admitted_order_states!r}.'
-	)
 
 	@jwt_required()
 	def get(self, order_id: int):
@@ -36,35 +29,16 @@ class Order(Resource):
 		return order.json()
 
 	@jwt_required()
-	def put(self, order_id: int):
-		"""
-		Permite actualizar el estado del pedido. Lo puede hacer el vendedor del producto.
-		"""
-		order = OrderModel.find_by_id(order_id)
-		if not order:
-			return {"message": f"El pedido con ID {order_id!r} no ha sido encontrado."}, 404
-
-		if current_identity.id != order.vendor_id:
-			return {"message": "No tiene permitido finalizar este pedido."}, 401
-
-		data = Order.parser.parse_args()
-
-		order.status = data['status']
-		order.save_to_db()
-
-		return order.json()
-
-	@jwt_required()
 	def delete(self, order_id: int):
 		"""
-		Permite eliminar el pedido de forma que este se cancele. Puede ser realizado por quien hizo el pedido.
+		Permite eliminar el pedido de forma que este se cancele.
 		"""
 		order = OrderModel.find_by_id(order_id)
 		if not order:
 			return {"message": f"El pedido con ID {order_id!r} no ha sido encontrado."}, 404
 
-		if current_identity.id != order.customer_id:
-			return {"message": "No tiene permitido cancelar este pedido."}, 401
+		if current_identity.id not in [order.customer_id, order.vendor_id]:
+			return {"message": "No tiene permitido eliminar este pedido."}, 401
 
 		order.delete_from_db()
 		return {"message": f"Pedido con ID {order_id!r} eliminado correctamente."}
